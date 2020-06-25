@@ -1,0 +1,14 @@
+{
+    "version": "0.2",
+    "requires" : ["pandas"],
+    "dumper" : {
+        "data_url" : ["https://github.com/polyg314/UniChem_BioThings_SDK/blob/master/UC_XREF_TEST.txt.gz",
+                      "https://github.com/polyg314/UniChem_BioThings_SDK/blob/master/UC_STRUCTURE_TEST.txt.gz",
+                      "ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_SOURCE.txt.gz"],
+        "uncompress" : true
+    },
+    "uploader" : {
+        "parser" : "parser:load_annotations",
+        "on_duplicates" : "error"
+    }
+}
