@@ -83,6 +83,7 @@ def load_annotations(data_folder):
         #     print("1M")
 
     # print(final_array[-1])
-    for entry in final_array:
-        yield entry
+    return final_array
+    # for entry in final_array:
+    #     yield entry
     
