@@ -81,8 +81,7 @@ def load_annotations(data_folder):
         last_inchi = inchi
         # if(counta%1000000 == 0):
         #     print("1M")
-
+    # for entry in final_array:
+    #     yield entry
     # print(final_array[-1])
-    # return final_array
-    for entry in final_array:
-        yield entry
+    return final_array
