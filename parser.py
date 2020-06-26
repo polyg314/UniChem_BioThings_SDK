@@ -59,7 +59,14 @@ def load_annotations(data_folder):
         source_id = row[4]
         # check to see if previous entry had same inchi code. if so, 
         if(last_inchi == inchi):
-            final_array[-1]["unichem"][source] = source_id
+            # if source id already exists for source, then create/add to list. if not, create first entry for source
+            if(final_array[-1]["unichem"][source]):
+                if(type(final_array[-1]["unichem"][source]) == str):
+                    final_array[-1]["unichem"][source] = [final_array[-1]["unichem"][source], source_id] 
+                else:
+                    final_array[-1]["unichem"][source].append(source_id) 
+            else:
+                final_array[-1]["unichem"][source] = source_id
         else:
             new_entry = {
                 "_id" : inchi,
@@ -68,6 +75,6 @@ def load_annotations(data_folder):
                 }
             }
             final_array.append(new_entry)
-
+        # set last inchi to check / dont have to pull from array every time
         last_inchi = inchi
     return final_array
