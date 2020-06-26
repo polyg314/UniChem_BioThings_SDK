@@ -24,13 +24,18 @@ def load_annotations(data_folder):
     # make lists of structure & xref chunks, to be concatenated later
     structure_chunk_list = []
     # read through file in chunks - too big to laod all at once
+    sdtype={'uci':'int32','standardinchikey':'str'}
+    
     structure_df_chunk = pd.read_csv(struct_file, sep='\t', header=None, usecols=['uci', 'standardinchikey'],
                                          names=['uci_old','standardinchi','standardinchikey','created','username','fikhb','uci','parent_smiles'],
-                                         chunksize=1000000) 
+                                         chunksize=1000000, dtype=sdtype) 
     xref_chunk_list = []
+    
+    xdtype={'uci':'int32','src_id':'int8','src_compound_id':'str'}
+    
     xref_df_chunk = pd.read_csv(xref_file, sep='\t', header=None, usecols=['uci','src_id','src_compound_id'],
                                          names=['uci_old','src_id','src_compound_id','assignment','last_release_u_when_current','created ','lastupdated','userstamp','aux_src','uci'],
-                                         chunksize=1000000) 
+                                         chunksize=1000000, dtype=xdtype) 
     
     # append structure chunks to list
     for chunk in structure_df_chunk:  
@@ -38,11 +43,23 @@ def load_annotations(data_folder):
 
     # concat the list into dataframe 
     complete_df = pd.concat(structure_chunk_list)
+    
+    
+    
+#     print(sys.getsizeof(structure_chunk_list))
+#     print(sys.getsizeof(complete_df))
+    
+    
+    del structure_df_chunk
     del structure_chunk_list
+
     # same for xref chunks - list -> dataframe 
     for chunk in xref_df_chunk:  
         xref_chunk_list.append(chunk)
     xref_df = pd.concat(xref_chunk_list)
+    
+    
+    del xref_df_chunk
     del xref_chunk_list
     # merge structure and xref dataframes by their UCI 
     complete_df = pd.merge(left=complete_df, right=xref_df, left_on='uci', right_on='uci')
@@ -50,9 +67,16 @@ def load_annotations(data_folder):
     # sort by their inchikey - make sure all rows with same inchi key are above/below each other
     complete_df = complete_df.sort_values(by=['standardinchikey'])
     
-    # create final list containing each entry in json format
-    final_array = [];
-    last_inchi = ''
+    
+    
+#     print(sys.getsizeof(complete_df))
+    
+#     print(complete_df.memory_usage(deep=True)) 
+    
+    new_entry = {}
+    last_inchi = '';
+    last_submitted_inchi = '';
+
     for row in complete_df.itertuples(): 
         inchi = row[1]
         source = source_dict[row[3]]
@@ -60,21 +84,24 @@ def load_annotations(data_folder):
         # check to see if previous entry had same inchi code. if so, 
         if(last_inchi == inchi):
             # if source id already exists for source, then create/add to list. if not, create first entry for source
-            if(final_array[-1]["unichem"][source]):
-                if(type(final_array[-1]["unichem"][source]) == str):
-                    final_array[-1]["unichem"][source] = [final_array[-1]["unichem"][source], source_id] 
+            if(new_entry[-1]["unichem"][source]):
+                if(type(new_entry[-1]["unichem"][source]) == str):
+                    new_entry[-1]["unichem"][source] = [new_entry[-1]["unichem"][source], source_id] 
                 else:
-                    final_array[-1]["unichem"][source].append(source_id) 
+                    new_entry[-1]["unichem"][source].append(source_id) 
             else:
-                final_array[-1]["unichem"][source] = source_id
+                new_entry[-1]["unichem"][source] = source_id
         else:
+            yield new_entry;
+            last_submitted_inchi = new_entry["_id"]
             new_entry = {
                 "_id" : inchi,
                 "unichem": {
                     source: source_id
                 }
             }
-            final_array.append(new_entry)
-        # set last inchi to check / dont have to pull from array every time
+            
         last_inchi = inchi
-    return final_array
+
+    if(last_submitted_inchi != new_entry["_id"]):
+        yield new_entry
