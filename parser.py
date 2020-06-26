@@ -7,7 +7,7 @@ from biothings import config
 logging = config.logger
 
 def load_annotations(data_folder):
-
+    # load source files
     source_file = os.path.join(data_folder,"UC_SOURCE.txt")
     struct_file = os.path.join(data_folder,"UC_STRUCTURE.txt")
     xref_file = os.path.join(data_folder,"UC_XREF.txt")
@@ -15,17 +15,15 @@ def load_annotations(data_folder):
     assert os.path.exists(struct_file)
     assert os.path.exists(xref_file)
 
-    # source_file = 'UC_SOURCE.txt'
-    # struct_file = 'UC_STRUCTURE_TEST.txt'
-    # xref_file = 'UC_XREF_TEST.txt'
-    
+    # create source dictionary, {source id: name of source}
     source_tsv = pd.read_csv(source_file, sep='\t', header= None)
     source_keys = list(source_tsv[0])
     source_values = list(source_tsv[1])
     source_dict = {source_keys[i]: source_values[i] for i in range(len(source_keys))}     
-#     print(source_dict)
 
+    # make lists of structure & xref chunks, to be concatenated later
     structure_chunk_list = []
+    # read through file in chunks - too big to laod all at once
     structure_df_chunk = pd.read_csv(struct_file, sep='\t', header=None, usecols=['uci', 'standardinchikey'],
                                          names=['uci_old','standardinchi','standardinchikey','created','username','fikhb','uci','parent_smiles'],
                                          chunksize=1000000) 
@@ -33,40 +31,33 @@ def load_annotations(data_folder):
     xref_df_chunk = pd.read_csv(xref_file, sep='\t', header=None, usecols=['uci','src_id','src_compound_id'],
                                          names=['uci_old','src_id','src_compound_id','assignment','last_release_u_when_current','created ','lastupdated','userstamp','aux_src','uci'],
                                          chunksize=1000000) 
-
+    
+    # append structure chunks to list
     for chunk in structure_df_chunk:  
         structure_chunk_list.append(chunk)
 
     # concat the list into dataframe 
-    structure_df = pd.concat(structure_chunk_list)
-
+    complete_df = pd.concat(structure_chunk_list)
+    del structure_chunk_list
+    # same for xref chunks - list -> dataframe 
     for chunk in xref_df_chunk:  
         xref_chunk_list.append(chunk)
-
-    # concat the list into dataframe 
     xref_df = pd.concat(xref_chunk_list)
-
-    complete_df = pd.merge(left=structure_df, right=xref_df, left_on='uci', right_on='uci')
-
-#     print(complete_df.shape)
-#     print(complete_df.head())
-#     print(complete_df.tail())
-
-    complete_df_sorted = complete_df.sort_values(by=['standardinchikey'])
-
-#     print(complete_df_sorted.shape)
-#     print(complete_df_sorted.head())
-#     print(complete_df_sorted.tail())
-
-    counta = 0
+    del xref_chunk_list
+    # merge structure and xref dataframes by their UCI 
+    complete_df = pd.merge(left=complete_df, right=xref_df, left_on='uci', right_on='uci')
+    del xref_df
+    # sort by their inchikey - make sure all rows with same inchi key are above/below each other
+    complete_df = complete_df.sort_values(by=['standardinchikey'])
+    
+    # create final list containing each entry in json format
     final_array = [];
     last_inchi = ''
-    for row in complete_df_sorted.itertuples(): 
-    #     counta = counta + 1;
-    # #     print(counta)
+    for row in complete_df.itertuples(): 
         inchi = row[1]
         source = source_dict[row[3]]
         source_id = row[4]
+        # check to see if previous entry had same inchi code. if so, 
         if(last_inchi == inchi):
             final_array[-1]["unichem"][source] = source_id
         else:
@@ -79,9 +70,4 @@ def load_annotations(data_folder):
             final_array.append(new_entry)
 
         last_inchi = inchi
-        # if(counta%1000000 == 0):
-        #     print("1M")
-    # for entry in final_array:
-    #     yield entry
-    # print(final_array[-1])
     return final_array
