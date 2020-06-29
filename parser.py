@@ -76,6 +76,7 @@ def load_annotations(data_folder):
     new_entry = {}
     last_inchi = '';
     last_submitted_inchi = '1';
+    final_array = []
 
     for row in complete_df.itertuples(): 
         inchi = row[1]
@@ -84,13 +85,13 @@ def load_annotations(data_folder):
         # check to see if previous entry had same inchi code. if so, 
         if(last_inchi == inchi):
             # if source id already exists for source, then create/add to list. if not, create first entry for source
-            if(new_entry[-1]["unichem"][source]):
-                if(type(new_entry[-1]["unichem"][source]) == str):
-                    new_entry[-1]["unichem"][source] = [new_entry[-1]["unichem"][source], source_id] 
+            if(source in new_entry["unichem"]):
+                if(type(new_entry["unichem"][source]) == str):
+                    new_entry["unichem"][source] = [new_entry["unichem"][source], source_id] 
                 else:
-                    new_entry[-1]["unichem"][source].append(source_id) 
+                    new_entry["unichem"][source].append(source_id) 
             else:
-                new_entry[-1]["unichem"][source] = source_id
+                new_entry["unichem"][source] = source_id
         elif(len(last_inchi) == 0): 
             new_entry = {
                 "_id" : inchi,
@@ -101,6 +102,7 @@ def load_annotations(data_folder):
             last_inchi = inchi
         else:
             yield new_entry;
+            final_array.append(new_entry)
             last_submitted_inchi = new_entry["_id"]
             new_entry = {
                 "_id" : inchi,
@@ -108,8 +110,11 @@ def load_annotations(data_folder):
                     source: source_id
                 }
             }
+
             
         last_inchi = inchi
+        final_array.append(new_entry)
 
     if(last_submitted_inchi != new_entry["_id"]):
         yield new_entry
+
