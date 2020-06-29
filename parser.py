@@ -75,7 +75,7 @@ def load_annotations(data_folder):
     
     new_entry = {}
     last_inchi = '';
-    last_submitted_inchi = '';
+    last_submitted_inchi = '1';
 
     for row in complete_df.itertuples(): 
         inchi = row[1]
@@ -91,6 +91,14 @@ def load_annotations(data_folder):
                     new_entry[-1]["unichem"][source].append(source_id) 
             else:
                 new_entry[-1]["unichem"][source] = source_id
+        elif(len(last_inchi) == 0): 
+            new_entry = {
+                "_id" : inchi,
+                "unichem": {
+                    source: source_id
+                }
+            }
+            last_inchi = inchi
         else:
             yield new_entry;
             last_submitted_inchi = new_entry["_id"]
