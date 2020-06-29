@@ -7,6 +7,7 @@ from biothings import config
 logging = config.logger
 
 def load_annotations(data_folder):
+    print("hellooooo")
     # load source files
     source_file = os.path.join(data_folder,"UC_SOURCE.txt")
     struct_file = os.path.join(data_folder,"UC_STRUCTURE.txt")
@@ -41,6 +42,8 @@ def load_annotations(data_folder):
     for chunk in structure_df_chunk:  
         structure_chunk_list.append(chunk)
 
+    del structure_df_chunk
+
     # concat the list into dataframe 
     complete_df = pd.concat(structure_chunk_list)
     
@@ -50,16 +53,17 @@ def load_annotations(data_folder):
 #     print(sys.getsizeof(complete_df))
     
     
-    del structure_df_chunk
+
     del structure_chunk_list
 
     # same for xref chunks - list -> dataframe 
     for chunk in xref_df_chunk:  
         xref_chunk_list.append(chunk)
+    del xref_df_chunk
+    
+
     xref_df = pd.concat(xref_chunk_list)
     
-    
-    del xref_df_chunk
     del xref_chunk_list
     # merge structure and xref dataframes by their UCI 
     complete_df = pd.merge(left=complete_df, right=xref_df, left_on='uci', right_on='uci')
