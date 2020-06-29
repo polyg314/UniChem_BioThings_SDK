@@ -2,9 +2,9 @@
     "version": "0.2",
     "requires" : ["pandas"],
     "dumper" : {
-        "data_url" : ["ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_SOURCE.txt.gz",
-                      "ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_STRUCTURE.txt.gz",
-                      "ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_XREF.txt.gz"],
+        "data_url" : ["https://github.com/polyg314/UniChem_BioThings_SDK/raw/master/UC_SOURCE.txt.gz",
+                      "https://github.com/polyg314/UniChem_BioThings_SDK/raw/master/UC_XP100.txt.gz",
+                      "https://github.com/polyg314/UniChem_BioThings_SDK/raw/master/UC_SP100.txt.gz"],
         "uncompress" : true
     },
     "uploader" : {
