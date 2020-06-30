@@ -9,8 +9,8 @@ logging = config.logger
 def load_annotations(data_folder):
     print("hellooooo")
     # load source files
-    source_file = os.path.join(data_folder,"UC_SOURCE.txt")
-    struct_file = os.path.join(data_folder,"UC_STRUCTURE.txt")
+    source_file = os.path.join(data_folder,"UC_SP900.txt")
+    struct_file = os.path.join(data_folder,"UC_SP900.txt")
     xref_file = os.path.join(data_folder,"UC_XREF.txt")
     assert os.path.exists(source_file)
     assert os.path.exists(struct_file)
@@ -106,7 +106,7 @@ def load_annotations(data_folder):
             }
             last_inchi = inchi
         else:
-            # yield new_entry;
+            yield new_entry;
             final_array.append(new_entry)
             last_submitted_inchi = new_entry["_id"]
             new_entry = {
@@ -121,6 +121,6 @@ def load_annotations(data_folder):
 
 
     if(last_submitted_inchi != new_entry["_id"]):
-        # yield new_entry
-        final_array.append(new_entry)
-    return final_array
+        yield new_entry
+        # final_array.append(new_entry)
+    # return final_array
