@@ -80,7 +80,7 @@ def load_annotations(data_folder):
     new_entry = {}
     last_inchi = '';
     last_submitted_inchi = '1';
-    final_array = [];
+    # final_array = [];
 
 
     for row in complete_df.itertuples(): 
@@ -107,7 +107,7 @@ def load_annotations(data_folder):
             last_inchi = inchi
         else:
             yield new_entry;
-            final_array.append(new_entry)
+            # final_array.append(new_entry)
             last_submitted_inchi = new_entry["_id"]
             new_entry = {
                 "_id" : inchi,
