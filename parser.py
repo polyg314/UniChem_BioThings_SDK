@@ -61,6 +61,9 @@ def load_annotations(data_folder):
     del xref_chunk_list
     # merge structure and xref dataframes by their UCI 
     complete_df = pd.merge(left=complete_df, right=xref_df, left_on='uci', right_on='uci')
+
+    complete_df.to_csv(index=False, path_or_buf=os.path.join(data_folder,"complete_df_unsorted.txt"), sep="\t")
+    
     del xref_df
     # sort by their inchikey - make sure all rows with same inchi key are above/below each other
     complete_df = complete_df.sort_values(by=['standardinchikey'])
