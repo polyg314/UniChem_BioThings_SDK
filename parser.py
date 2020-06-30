@@ -10,8 +10,8 @@ def load_annotations(data_folder):
     print("hellooooo")
     # load source files
     source_file = os.path.join(data_folder,"UC_SOURCE.txt")
-    struct_file = os.path.join(data_folder,"UC_SP900.txt")
-    xref_file = os.path.join(data_folder,"UC_XP900.txt")
+    struct_file = os.path.join(data_folder,"UC_STRUCTURE.txt")
+    xref_file = os.path.join(data_folder,"UC_XREF.txt")
     assert os.path.exists(source_file)
     assert os.path.exists(struct_file)
     assert os.path.exists(xref_file)
