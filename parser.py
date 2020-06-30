@@ -2,7 +2,7 @@ import pandas as pd
 import os, csv, re
 import numpy as np
 from biothings.utils.dataload import dict_convert, dict_sweep
-import dask.dataframe as dd
+# import dask.dataframe as dd
 from csvsort import csvsort
 
 from biothings import config
