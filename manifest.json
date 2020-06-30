@@ -3,8 +3,8 @@
     "requires" : ["pandas"],
     "dumper" : {
         "data_url" : ["https://github.com/polyg314/UniChem_BioThings_SDK/raw/master/UC_SOURCE.txt.gz",
-                      "https://github.com/polyg314/UniChem_BioThings_SDK/raw/master/UC_XP100.txt.gz",
-                      "https://github.com/polyg314/UniChem_BioThings_SDK/raw/master/UC_SP100.txt.gz"],
+                      "https://github.com/polyg314/UniChem_BioThings_SDK/raw/master/UC_XP900.txt.gz",
+                      "https://github.com/polyg314/UniChem_BioThings_SDK/raw/master/UC_SP900.txt.gz"],
         "uncompress" : true
     },
     "uploader" : {
