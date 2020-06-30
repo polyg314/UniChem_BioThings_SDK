@@ -24,7 +24,7 @@ def load_annotations(data_folder):
 
     # make lists of structure & xref chunks, to be concatenated later
     structure_chunk_list = []
-    # read through file in chunks - too big to laod all at once
+    # read through file in chunks - too big to loadd all at once
     sdtype={'uci':'int32','standardinchikey':'str'}
     
     structure_df_chunk = pd.read_csv(struct_file, sep='\t', header=None, usecols=['uci', 'standardinchikey'],
@@ -48,12 +48,6 @@ def load_annotations(data_folder):
     complete_df = pd.concat(structure_chunk_list)
     
     
-    
-#     print(sys.getsizeof(structure_chunk_list))
-#     print(sys.getsizeof(complete_df))
-    
-    
-
     del structure_chunk_list
 
     # same for xref chunks - list -> dataframe 
@@ -70,18 +64,12 @@ def load_annotations(data_folder):
     del xref_df
     # sort by their inchikey - make sure all rows with same inchi key are above/below each other
     complete_df = complete_df.sort_values(by=['standardinchikey'])
-    
-    
-    
-#     print(sys.getsizeof(complete_df))
-    
-#     print(complete_df.memory_usage(deep=True)) 
+
+    complete_df.to_csv(index=False, path_or_buf=os.path.join(data_folder,"complete_df.txt"), sep="\t")
     
     new_entry = {}
     last_inchi = '';
     last_submitted_inchi = '1';
-    # final_array = [];
-
 
     for row in complete_df.itertuples(): 
         inchi = row[1]
@@ -107,7 +95,6 @@ def load_annotations(data_folder):
             last_inchi = inchi
         else:
             yield new_entry;
-            # final_array.append(new_entry)
             last_submitted_inchi = new_entry["_id"]
             new_entry = {
                 "_id" : inchi,
@@ -122,5 +109,3 @@ def load_annotations(data_folder):
 
     if(last_submitted_inchi != new_entry["_id"]):
         yield new_entry
-        # final_array.append(new_entry)
-    # return final_array
