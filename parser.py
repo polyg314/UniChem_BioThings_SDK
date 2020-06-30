@@ -2,6 +2,8 @@ import pandas as pd
 import os, csv, re
 import numpy as np
 from biothings.utils.dataload import dict_convert, dict_sweep
+import dask.dataframe as dd
+from csvsort import csvsort
 
 from biothings import config
 logging = config.logger
@@ -45,40 +47,60 @@ def load_annotations(data_folder):
     del structure_df_chunk
 
     # concat the list into dataframe 
-    complete_df = pd.concat(structure_chunk_list)
-    
-    complete_df.to_csv(index=False, path_or_buf=os.path.join(data_folder,"complete_df_unmerged.txt"), sep="\t")
-    
+    structure_df = pd.concat(structure_chunk_list)
+
     del structure_chunk_list
+
+    structure_df.to_csv(index=False, path_or_buf=os.path.join(data_folder,"structure_df.csv"))
+    
+    del structure_df
 
     # same for xref chunks - list -> dataframe 
     for chunk in xref_df_chunk:  
         xref_chunk_list.append(chunk)
     del xref_df_chunk
     
-
     xref_df = pd.concat(xref_chunk_list)
-    
+
     del xref_chunk_list
-    # merge structure and xref dataframes by their UCI 
-    complete_df = pd.merge(left=complete_df, right=xref_df, left_on='uci', right_on='uci')
 
-    complete_df.to_csv(index=False, path_or_buf=os.path.join(data_folder,"complete_df_unsorted.txt"), sep="\t")
-
-    del xref_df
-    # sort by their inchikey - make sure all rows with same inchi key are above/below each other
-    complete_df = complete_df.sort_values(by=['standardinchikey'])
-
-    complete_df.to_csv(index=False, path_or_buf=os.path.join(data_folder,"complete_df.txt"), sep="\t")
+    xref_df.to_csv(index=False, path_or_buf=os.path.join(data_folder,"xref_df.txt"))
     
-    del complete_df
+    del xref_df
+
+    sdf = dd.read_csv('structure_df.csv')
+    xdf = dd.read_csv('xref_df.csv')
+
+    df = dd.merge(sdf, xdf, on="uci").compute()
+
+    del sdf
+    del xdf
+
+    df.to_csv('complete_df.csv', index=False)
+
+    del df
+
+    csvsort('complete_df.csv',[0])
+
+    # merge structure and xref dataframes by their UCI 
+    # complete_df = pd.merge(left=complete_df, right=xref_df, left_on='uci', right_on='uci')
+
+    # complete_df.to_csv(index=False, path_or_buf=os.path.join(data_folder,"complete_df_unsorted.txt"), sep="\t")
+
+
+    # sort by their inchikey - make sure all rows with same inchi key are above/below each other
+    # complete_df = complete_df.sort_values(by=['standardinchikey'])
+
+    # complete_df.to_csv(index=False, path_or_buf=os.path.join(data_folder,"complete_df.txt"), sep="\t")
+    
+    # del complete_df
 
     new_entry = {}
     last_inchi = '';
     last_submitted_inchi = '1';
 
     # cd_type = {'uci':'int32','src_id':'int8','src_compound_id':'str'}
-    complete_df_chunk = pd.read_csv(os.path.join(data_folder,"complete_df.txt"), sep='\t', chunksize=1000000)
+    complete_df_chunk = pd.read_csv(os.path.join(data_folder,"complete_df.csv"), chunksize=1000000)
 
     for chunk in complete_df_chunk:
         for row in chunk.itertuples(): 
