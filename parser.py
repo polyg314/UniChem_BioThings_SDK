@@ -67,44 +67,48 @@ def load_annotations(data_folder):
 
     complete_df.to_csv(index=False, path_or_buf=os.path.join(data_folder,"complete_df.txt"), sep="\t")
     
+    del complete_df
+
     new_entry = {}
     last_inchi = '';
     last_submitted_inchi = '1';
 
-    for row in complete_df.itertuples(): 
-        inchi = row[1]
-        source = source_dict[row[3]]
-        source_id = row[4]
-        # check to see if previous entry had same inchi code. if so, 
-        if(last_inchi == inchi):
-            # if source id already exists for source, then create/add to list. if not, create first entry for source
-            if(source in new_entry["unichem"]):
-                if(type(new_entry["unichem"][source]) == str):
-                    new_entry["unichem"][source] = [new_entry["unichem"][source], source_id] 
-                else:
-                    new_entry["unichem"][source].append(source_id) 
-            else:
-                new_entry["unichem"][source] = source_id
-        elif(len(last_inchi) == 0): 
-            new_entry = {
-                "_id" : inchi,
-                "unichem": {
-                    source: source_id
-                }
-            }
-            last_inchi = inchi
-        else:
-            yield new_entry;
-            last_submitted_inchi = new_entry["_id"]
-            new_entry = {
-                "_id" : inchi,
-                "unichem": {
-                    source: source_id
-                }
-            }
+    # cd_type = {'uci':'int32','src_id':'int8','src_compound_id':'str'}
+    complete_df_chunk = pd.read_csv(os.path.join(data_folder,"complete_df.txt"), sep='\t', chunksize=1000000)
 
-            
-        last_inchi = inchi
+    for chunk in complete_df_chunk:
+        for row in chunk.itertuples(): 
+            inchi = row[1]
+            source = source_dict[row[3]]
+            source_id = row[4]
+            # check to see if previous entry had same inchi code. if so, 
+            if(last_inchi == inchi):
+                # if source id already exists for source, then create/add to list. if not, create first entry for source
+                if(source in new_entry["unichem"]):
+                    if(type(new_entry["unichem"][source]) == str):
+                        new_entry["unichem"][source] = [new_entry["unichem"][source], source_id] 
+                    else:
+                        new_entry["unichem"][source].append(source_id) 
+                else:
+                    new_entry["unichem"][source] = source_id
+            elif(len(last_inchi) == 0): 
+                new_entry = {
+                    "_id" : inchi,
+                    "unichem": {
+                        source: source_id
+                    }
+                }
+                last_inchi = inchi
+            else:
+                yield new_entry;
+                last_submitted_inchi = new_entry["_id"]
+                new_entry = {
+                    "_id" : inchi,
+                    "unichem": {
+                        source: source_id
+                    }
+                }
+            last_inchi = inchi
 
 
     if(last_submitted_inchi != new_entry["_id"]):
