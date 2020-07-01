@@ -93,11 +93,11 @@ def load_annotations(data_folder):
 
     # del xref_chunk_list
 
-    del xref_df_chunk
+    # del xref_df_chunk
 
-    del xref_df
+    # del xref_df
 
-    csvsort(os.path.join(data_folder,"xref_df.csv"),[0])
+    # csvsort(os.path.join(data_folder,"xref_df.csv"),[0])
     # del complete_df_chunk
 
     # xref_df.to_csv(index=False, path_or_buf=os.path.join(data_folder,"xref_df.txt"))
