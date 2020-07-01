@@ -39,21 +39,27 @@ def load_annotations(data_folder):
 
     
     # append structure chunks to list
-    for chunk in structure_df_chunk:  
-        structure_chunk_list.append(chunk)
+    smerge_counter = 0;
+
+    for chunk in structure_df_chunk:
+        if(smerge_counter == 0):
+            chunk.to_csv(path_or_buf=os.path.join(data_folder,"structure_df.csv"), index=False)
+            merge_counter = 1;  
+        else:
+            complete_df_chunk.to_csv(path_or_buf=os.path.join(data_folder,"structure_df.csv"), index=False, mode='a', header=False)    
 
     del structure_df_chunk
 
     # concat the list into dataframe 
-    structure_df = pd.concat(structure_chunk_list)
+    # structure_df = pd.concat(structure_chunk_list)
 
-    del structure_chunk_list
+    # del structure_chunk_list
 
-    structure_df.to_csv(index=False, path_or_buf=os.path.join(data_folder,"structure_df.csv"))
+    # structure_df.to_csv(index=False, path_or_buf=os.path.join(data_folder,"structure_df.csv"))
     
-    del structure_df 
+    # del structure_df 
 
-    csvsort(os.path.join(data_folder,"structure_df.csv"),[1])
+    # csvsort(os.path.join(data_folder,"structure_df.csv"),[1])
     # del structure_df
 
     # same for xref chunks - list -> dataframe 
@@ -67,19 +73,26 @@ def load_annotations(data_folder):
                                          names=['uci_old','src_id','src_compound_id','assignment','last_release_u_when_current','created ','lastupdated','userstamp','aux_src','uci'],
                                          chunksize=1000000, dtype=xdtype)  
 
-    for chunk in xref_df_chunk:  
-        xref_chunk_list.append(chunk)
+    xmerge_counter = 0;
 
-    xref_df = pd.concat(xref_chunk_list)
+    for chunk in xref_df_chunk:
+        if(xmerge_counter == 0):
+            chunk.to_csv(path_or_buf=os.path.join(data_folder,"xref_df.csv"), index=False)
+            merge_counter = 1;  
+        else:
+            complete_df_chunk.to_csv(path_or_buf=os.path.join(data_folder,"xref_df.csv"), index=False, mode='a', header=False)    
+
+
+    # xref_df = pd.concat(xref_chunk_list)
 
     del xref_chunk_list
 
-    xref_df.to_csv(index=False, path_or_buf=os.path.join(data_folder,"xref_df.csv"))
+    # xref_df.to_csv(index=False, path_or_buf=os.path.join(data_folder,"xref_df.csv"))
 
-    del xref_df
+    # del xref_df
 
     xdf_chunk = pd.read_csv(os.path.join(data_folder,"xref_df.csv"), chunksize=100000) 
-    
+
     merge_counter = 0; 
     for xchunk in xdf_chunk:
         sdf_chunk = pd.read_csv(os.path.join(data_folder,"structure_df.csv"), chunksize=100000)
