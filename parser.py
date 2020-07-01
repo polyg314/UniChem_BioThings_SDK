@@ -94,7 +94,7 @@ def load_annotations(data_folder):
 
 
     del sdf_chunk 
-    del xref_df 
+    del xdf_chunk 
 
     csvsort(os.path.join(data_folder,"complete_df.csv"),[0])
 
