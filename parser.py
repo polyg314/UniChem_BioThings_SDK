@@ -4,7 +4,7 @@ import numpy as np
 from biothings.utils.dataload import dict_convert, dict_sweep
 
 from .csvsort import csvsort
-from .dask import dask.dataframe as dd
+from .dask import dask
 # import dask.dataframe as dd
 
 from biothings import config
