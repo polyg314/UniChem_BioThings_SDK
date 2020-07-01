@@ -58,7 +58,8 @@ def load_annotations(data_folder):
     # del structure_df
 
     # same for xref chunks - list -> dataframe 
-    merge_counter == 0
+    merge_counter = 0;
+    
     for chunk in xref_df_chunk:
         complete_df_chunk = pd.merge(left=structure_df, right=chunk, left_on='uci', right_on='uci')
         if(merge_counter == 0):
