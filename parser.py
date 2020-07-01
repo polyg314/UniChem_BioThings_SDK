@@ -14,8 +14,8 @@ def load_annotations(data_folder):
     print("hellooooo")
     # load source files
     source_file = os.path.join(data_folder,"UC_SOURCE.txt")
-    struct_file = os.path.join(data_folder,"UC_STRUCTURE.txt")
-    xref_file = os.path.join(data_folder,"UC_XREF.txt")
+    struct_file = os.path.join(data_folder,"UC_SP900.txt")
+    xref_file = os.path.join(data_folder,"UC_XP900.txt")
     assert os.path.exists(source_file)
     assert os.path.exists(struct_file)
     assert os.path.exists(xref_file)
@@ -49,6 +49,8 @@ def load_annotations(data_folder):
 
     structure_df.to_csv(index=False, path_or_buf=os.path.join(data_folder,"structure_df.csv"))
     
+    del structure_df 
+
     csvsort(os.path.join(data_folder,"structure_df.csv"),[1])
     # del structure_df
 
@@ -80,7 +82,10 @@ def load_annotations(data_folder):
     del xref_chunk_list
 
     xref_df.to_csv(index=False, path_or_buf=os.path.join(data_folder,"xref_df.csv"))
-    csvsort(os.path.join(data_folder,"structure_df.csv"),[2])
+
+    del xref_df 
+
+    csvsort(os.path.join(data_folder,"xref_df.csv"),[2])
     #     xref_chunk_list.append(chunk)
     # del xref_df_chunk
     
