@@ -99,7 +99,8 @@ def load_annotations(data_folder):
             complete_df_chunk.to_csv(path_or_buf=os.path.join(data_folder,"complete_df.csv"), index=False, mode='a', header=False)  
 
 
-    # del xref_df 
+    del sdf_chunk 
+    del xref_df 
 
     # sdf = pd.read_csv(os.path.join(data_folder,"structure_df.csv"))
     # xdf = pd.read_csv(os.path.join(data_folder,"xref_df.csv"))
