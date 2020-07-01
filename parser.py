@@ -87,7 +87,7 @@ def load_annotations(data_folder):
 
 
 
-    sdf_chunk = pd.read_csv(os.path.join(data_folder,"structure_df.csv") sep='\t', chunksize=100000) 
+    sdf_chunk = pd.read_csv(os.path.join(data_folder,"structure_df.csv"), chunksize=100000) 
 
     merge_counter = 0; 
     for chunk in sdf_chunk:
