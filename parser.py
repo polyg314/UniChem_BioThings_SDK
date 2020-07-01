@@ -13,7 +13,8 @@ from biothings import config
 logging = config.logger
 
 def load_annotations(data_folder):
-    print("hellooooo")
+
+    current_chunk_size = 100000;
     # load source files
     source_file = os.path.join(data_folder,"UC_SOURCE.txt")
     struct_file = os.path.join(data_folder,"UC_SP900.txt")
@@ -35,7 +36,7 @@ def load_annotations(data_folder):
     
     structure_df_chunk = pd.read_csv(struct_file, sep='\t', header=None, usecols=['uci', 'standardinchikey'],
                                          names=['uci_old','standardinchi','standardinchikey','created','username','fikhb','uci','parent_smiles'],
-                                         chunksize=1000000, dtype=sdtype) 
+                                         chunksize=current_chunk_size, dtype=sdtype) 
 
     
     # append structure chunks to list
@@ -50,20 +51,6 @@ def load_annotations(data_folder):
 
     del structure_df_chunk
 
-    # concat the list into dataframe 
-    # structure_df = pd.concat(structure_chunk_list)
-
-    # del structure_chunk_list
-
-    # structure_df.to_csv(index=False, path_or_buf=os.path.join(data_folder,"structure_df.csv"))
-    
-    # del structure_df 
-
-    # csvsort(os.path.join(data_folder,"structure_df.csv"),[1])
-    # del structure_df
-
-    # same for xref chunks - list -> dataframe 
-    merge_counter = 0;
 
     xref_chunk_list = []
     
@@ -71,7 +58,7 @@ def load_annotations(data_folder):
     
     xref_df_chunk = pd.read_csv(xref_file, sep='\t', header=None, usecols=['uci','src_id','src_compound_id'],
                                          names=['uci_old','src_id','src_compound_id','assignment','last_release_u_when_current','created ','lastupdated','userstamp','aux_src','uci'],
-                                         chunksize=1000000, dtype=xdtype)  
+                                         chunksize=current_chunk_size, dtype=xdtype)  
 
     xmerge_counter = 0;
 
@@ -82,20 +69,13 @@ def load_annotations(data_folder):
         else:
             complete_df_chunk.to_csv(path_or_buf=os.path.join(data_folder,"xref_df.csv"), index=False, mode='a', header=False)    
 
-
-    # xref_df = pd.concat(xref_chunk_list)
-
     del xref_chunk_list
 
-    # xref_df.to_csv(index=False, path_or_buf=os.path.join(data_folder,"xref_df.csv"))
-
-    # del xref_df
-
-    xdf_chunk = pd.read_csv(os.path.join(data_folder,"xref_df.csv"), chunksize=100000) 
+    xdf_chunk = pd.read_csv(os.path.join(data_folder,"xref_df.csv"), chunksize=current_chunk_size) 
 
     merge_counter = 0; 
     for xchunk in xdf_chunk:
-        sdf_chunk = pd.read_csv(os.path.join(data_folder,"structure_df.csv"), chunksize=100000)
+        sdf_chunk = pd.read_csv(os.path.join(data_folder,"structure_df.csv"), chunksize=current_chunk_size)
         for schunk in sdf_chunk:
             complete_df_chunk = pd.merge(left=schunk, right=xchunk, left_on='uci', right_on='uci')
             if(merge_counter == 0):
@@ -114,7 +94,7 @@ def load_annotations(data_folder):
     last_inchi = '';
     last_submitted_inchi = '1';
 
-    complete_df_chunk = pd.read_csv(os.path.join(data_folder,"complete_df.csv"), chunksize=1000000)
+    complete_df_chunk = pd.read_csv(os.path.join(data_folder,"complete_df.csv"), chunksize=current_chunk_size)
 
     for chunk in complete_df_chunk:
         for row in chunk.itertuples(): 
