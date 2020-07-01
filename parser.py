@@ -53,8 +53,8 @@ def load_annotations(data_folder):
                 complete_df_chunk.to_csv(path_or_buf=os.path.join(data_folder,"complete_df.csv"), index=False, mode='a', header=False)  
 
 
-    del sdf_chunk 
-    del xdf_chunk 
+    del structure_df_chunk
+    del xref_df_chunk 
 
     csvsort(os.path.join(data_folder,"complete_df.csv"),[0])
 
