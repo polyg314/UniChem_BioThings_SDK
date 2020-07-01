@@ -53,7 +53,7 @@ def load_annotations(data_folder):
     
     del structure_df 
 
-    csvsort(os.path.join(data_folder,"structure_df.csv"),int([1]))
+    csvsort(os.path.join(data_folder,"structure_df.csv"),[1])
     # del structure_df
 
     # same for xref chunks - list -> dataframe 
@@ -85,14 +85,28 @@ def load_annotations(data_folder):
 
     xref_df.to_csv(index=False, path_or_buf=os.path.join(data_folder,"xref_df.csv"))
 
-    del xref_df 
 
-    sdf = pd.read_csv(os.path.join(data_folder,"structure_df.csv"))
-    xdf = pd.read_csv(os.path.join(data_folder,"xref_df.csv"))
-    sdf.merge(xdf, left_on='uci', right_on='uci').to_csv(os.path.join(data_folder,"complete_df.csv"), index=False)
 
-    del sdf
-    del xdf 
+    sdf_chunk = pd.read_csv(os.path.join(data_folder,"structure_df.csv") sep='\t', chunksize=100000) 
+
+    merge_counter = 0; 
+    for chunk in sdf_chunk:
+        complete_df_chunk = pd.merge(left=chunk, right=xref_df, left_on='uci', right_on='uci')
+        if(merge_counter == 0):
+            complete_df_chunk.to_csv(path_or_buf=os.path.join(data_folder,"complete_df.csv"), index=False)
+            merge_counter = 1;  
+        else:
+            complete_df_chunk.to_csv(path_or_buf=os.path.join(data_folder,"complete_df.csv"), index=False, mode='a', header=False)  
+
+
+    # del xref_df 
+
+    # sdf = pd.read_csv(os.path.join(data_folder,"structure_df.csv"))
+    # xdf = pd.read_csv(os.path.join(data_folder,"xref_df.csv"))
+    # sdf.merge(xdf, left_on='uci', right_on='uci').to_csv(os.path.join(data_folder,"complete_df.csv"), index=False)
+
+    # del sdf
+    # del xdf 
     # del cdf
 
     # csvsort(os.path.join(data_folder,"xref_df.csv"),[2])
