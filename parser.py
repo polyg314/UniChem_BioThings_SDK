@@ -78,11 +78,10 @@ def load_annotations(data_folder):
 
     del xref_df
 
-    xdf_chunk = pd.read_csv(os.path.join(data_folder,"xref_df.csv"), chunksize=1000000) 
-    sdf_chunk = pd.read_csv(os.path.join(data_folder,"structure_df.csv"), chunksize=1000000) 
+    xdf_chunk = pd.read_csv(os.path.join(data_folder,"xref_df.csv"), chunksize=10000) 
+    sdf_chunk = pd.read_csv(os.path.join(data_folder,"structure_df.csv"), chunksize=10000) 
 
     merge_counter = 0; 
-
     for xchunk in xdf_chunk:
         for schunk in sdf_chunk:
             complete_df_chunk = pd.merge(left=schunk, right=xchunk, left_on='uci', right_on='uci')
