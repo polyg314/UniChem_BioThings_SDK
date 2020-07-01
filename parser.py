@@ -65,16 +65,7 @@ def load_annotations(data_folder):
     
     xref_df_chunk = pd.read_csv(xref_file, sep='\t', header=None, usecols=['uci','src_id','src_compound_id'],
                                          names=['uci_old','src_id','src_compound_id','assignment','last_release_u_when_current','created ','lastupdated','userstamp','aux_src','uci'],
-                                         chunksize=1000000, dtype=xdtype) 
-
-
-    # for chunk in xref_df_chunk:
-    #     complete_df_chunk = pd.merge(left=structure_df, right=chunk, left_on='uci', right_on='uci')
-    #     if(merge_counter == 0):
-    #         complete_df_chunk.to_csv(path_or_buf=os.path.join(data_folder,"complete_df.csv"), index=False)
-    #         merge_counter = 1;  
-    #     else:
-    #         complete_df_chunk.to_csv(path_or_buf=os.path.join(data_folder,"complete_df.csv"), index=False, mode='a', header=False)  
+                                         chunksize=1000000, dtype=xdtype)  
 
     for chunk in xref_df_chunk:  
         xref_chunk_list.append(chunk)
@@ -85,82 +76,32 @@ def load_annotations(data_folder):
 
     xref_df.to_csv(index=False, path_or_buf=os.path.join(data_folder,"xref_df.csv"))
 
+    del xref_df
 
-
+    xdf_chunk = pd.read_csv(os.path.join(data_folder,"xref_df.csv"), chunksize=100000) 
     sdf_chunk = pd.read_csv(os.path.join(data_folder,"structure_df.csv"), chunksize=100000) 
 
     merge_counter = 0; 
-    for chunk in sdf_chunk:
-        complete_df_chunk = pd.merge(left=chunk, right=xref_df, left_on='uci', right_on='uci')
-        if(merge_counter == 0):
-            complete_df_chunk.to_csv(path_or_buf=os.path.join(data_folder,"complete_df.csv"), index=False)
-            merge_counter = 1;  
-        else:
-            complete_df_chunk.to_csv(path_or_buf=os.path.join(data_folder,"complete_df.csv"), index=False, mode='a', header=False)  
+    
+    for xchunk in xdf_chunk:
+        for schunk in sdf_chunk:
+            complete_df_chunk = pd.merge(left=schunk, right=xchunk, left_on='uci', right_on='uci')
+            if(merge_counter == 0):
+                complete_df_chunk.to_csv(path_or_buf=os.path.join(data_folder,"complete_df.csv"), index=False)
+                merge_counter = 1;  
+            else:
+                complete_df_chunk.to_csv(path_or_buf=os.path.join(data_folder,"complete_df.csv"), index=False, mode='a', header=False)  
 
 
     del sdf_chunk 
     del xref_df 
 
-    # sdf = pd.read_csv(os.path.join(data_folder,"structure_df.csv"))
-    # xdf = pd.read_csv(os.path.join(data_folder,"xref_df.csv"))
-    # sdf.merge(xdf, left_on='uci', right_on='uci').to_csv(os.path.join(data_folder,"complete_df.csv"), index=False)
-
-    # del sdf
-    # del xdf 
-    # del cdf
-
-    # csvsort(os.path.join(data_folder,"xref_df.csv"),[2])
-    #     xref_chunk_list.append(chunk)
-    # del xref_df_chunk
-    
-    # xref_df = pd.concat(xref_chunk_list)
-
-    # del xref_chunk_list
-
-    # del xref_df_chunk
-
-    # del xref_df
-
-    # csvsort(os.path.join(data_folder,"xref_df.csv"),[0])
-    # del complete_df_chunk
-
-    # xref_df.to_csv(index=False, path_or_buf=os.path.join(data_folder,"xref_df.txt"))
-    
-    # del xref_df
-
-    # sdf = dd.read_csv('structure_df.csv')
-    # xdf = dd.read_csv('xref_df.csv')
-
-    # df = dd.merge(sdf, xdf, on="uci").compute()
-
-    # del sdf
-    # del xdf
-
-    # df.to_csv('complete_df.csv', index=False)
-
-    # del df
-
     csvsort(os.path.join(data_folder,"complete_df.csv"),[0])
-
-    # merge structure and xref dataframes by their UCI 
-    # complete_df = pd.merge(left=complete_df, right=xref_df, left_on='uci', right_on='uci')
-
-    # complete_df.to_csv(index=False, path_or_buf=os.path.join(data_folder,"complete_df_unsorted.txt"), sep="\t")
-
-
-    # sort by their inchikey - make sure all rows with same inchi key are above/below each other
-    # complete_df = complete_df.sort_values(by=['standardinchikey'])
-
-    # complete_df.to_csv(index=False, path_or_buf=os.path.join(data_folder,"complete_df.txt"), sep="\t")
-    
-    # del complete_df
 
     new_entry = {}
     last_inchi = '';
     last_submitted_inchi = '1';
 
-    # cd_type = {'uci':'int32','src_id':'int8','src_compound_id':'str'}
     complete_df_chunk = pd.read_csv(os.path.join(data_folder,"complete_df.csv"), chunksize=1000000)
 
     for chunk in complete_df_chunk:
