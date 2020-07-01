@@ -87,6 +87,14 @@ def load_annotations(data_folder):
 
     del xref_df 
 
+    sdf = pd.read_csv(os.path.join(data_folder,"structure_df.csv"))
+    xdf = pd.read_csv(os.path.join(data_folder,"xref_df.csv"))
+    cdf = sdf.join(xdf, on="uci").to_csv("complete_df.csv")
+
+    del sdf
+    del xdf 
+    del cdf
+
     # csvsort(os.path.join(data_folder,"xref_df.csv"),[2])
     #     xref_chunk_list.append(chunk)
     # del xref_df_chunk
