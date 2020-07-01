@@ -89,7 +89,7 @@ def load_annotations(data_folder):
 
     sdf = pd.read_csv(os.path.join(data_folder,"structure_df.csv"))
     xdf = pd.read_csv(os.path.join(data_folder,"xref_df.csv"))
-    cdf = sdf.merge(xdf, on="uci", how='left').to_csv(os.path.join(data_folder,"complete_df.csv"))
+    cdf = sdf.merge(xdf, on="uci", how='left').to_csv(os.path.join(data_folder,"complete_df.csv"), index=False)
 
     del sdf
     del xdf 
