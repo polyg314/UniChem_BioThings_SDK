@@ -58,9 +58,13 @@ def load_annotations(data_folder):
     # del structure_df
 
     # same for xref chunks - list -> dataframe 
+    merge_counter == 0
     for chunk in xref_df_chunk:
         complete_df_chunk = pd.merge(left=structure_df, right=chunk, left_on='uci', right_on='uci')
-        complete_df_chunk.to_csv('complete_df.csv', mode='a', header=False)  
+        if(merge_counter == 0):
+            complete_df_chunk.to_csv(path_or_buf=os.path.join(data_folder,"complete_df.csv"), index=False)  
+        else:
+            complete_df_chunk.to_csv(path_or_buf=os.path.join(data_folder,"complete_df.csv"), index=False, mode='a', header=False)  
     #     xref_chunk_list.append(chunk)
     # del xref_df_chunk
     
@@ -88,7 +92,7 @@ def load_annotations(data_folder):
 
     # del df
 
-    csvsort('complete_df.csv',[0])
+    csvsort(os.path.join(data_folder,"complete_df.csv"),[0])
 
     # merge structure and xref dataframes by their UCI 
     # complete_df = pd.merge(left=complete_df, right=xref_df, left_on='uci', right_on='uci')
