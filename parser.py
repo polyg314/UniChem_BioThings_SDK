@@ -59,7 +59,7 @@ def load_annotations(data_folder):
 
     # same for xref chunks - list -> dataframe 
     for chunk in xref_df_chunk:
-        complete_df_chunk = pd.merge(left=structure_df, right=xref_df, left_on='uci', right_on='uci')
+        complete_df_chunk = pd.merge(left=structure_df, right=chunk, left_on='uci', right_on='uci')
         complete_df_chunk.to_csv('complete_df.csv', mode='a', header=False)  
     #     xref_chunk_list.append(chunk)
     # del xref_df_chunk
