@@ -29,30 +29,6 @@ def load_annotations(data_folder):
     source_values = list(source_tsv[1])
     source_dict = {source_keys[i]: source_values[i] for i in range(len(source_keys))}     
 
-    # make lists of structure & xref chunks, to be concatenated later
-    structure_chunk_list = []
-    # read through file in chunks - too big to loadd all at once
-    sdtype={'uci':'int32','standardinchikey':'str'}
-    
-    structure_df_chunk = pd.read_csv(struct_file, sep='\t', header=None, usecols=['uci', 'standardinchikey'],
-                                         names=['uci_old','standardinchi','standardinchikey','created','username','fikhb','uci','parent_smiles'],
-                                         chunksize=current_chunk_size, dtype=sdtype) 
-
-    
-    # append structure chunks to list
-    smerge_counter = 0;
-
-    for chunk in structure_df_chunk:
-        if(smerge_counter == 0):
-            chunk.to_csv(path_or_buf=os.path.join(data_folder,"structure_df.csv"), index=False)
-            merge_counter = 1;  
-        else:
-            complete_df_chunk.to_csv(path_or_buf=os.path.join(data_folder,"structure_df.csv"), index=False, mode='a', header=False)    
-
-    del structure_df_chunk
-
-
-    xref_chunk_list = []
     
     xdtype={'uci':'int32','src_id':'int8','src_compound_id':'str'}
     
@@ -60,23 +36,15 @@ def load_annotations(data_folder):
                                          names=['uci_old','src_id','src_compound_id','assignment','last_release_u_when_current','created ','lastupdated','userstamp','aux_src','uci'],
                                          chunksize=current_chunk_size, dtype=xdtype)  
 
-    xmerge_counter = 0;
-
-    for chunk in xref_df_chunk:
-        if(xmerge_counter == 0):
-            chunk.to_csv(path_or_buf=os.path.join(data_folder,"xref_df.csv"), index=False)
-            merge_counter = 1;  
-        else:
-            complete_df_chunk.to_csv(path_or_buf=os.path.join(data_folder,"xref_df.csv"), index=False, mode='a', header=False)    
-
-    del xref_chunk_list
-
-    xdf_chunk = pd.read_csv(os.path.join(data_folder,"xref_df.csv"), chunksize=current_chunk_size) 
+    sdtype={'uci':'int32','standardinchikey':'str'}
 
     merge_counter = 0; 
-    for xchunk in xdf_chunk:
-        sdf_chunk = pd.read_csv(os.path.join(data_folder,"structure_df.csv"), chunksize=current_chunk_size)
-        for schunk in sdf_chunk:
+
+    for xchunk in xref_df_chunk:
+        structure_df_chunk = pd.read_csv(struct_file, sep='\t', header=None, usecols=['uci', 'standardinchikey'],
+                                         names=['uci_old','standardinchi','standardinchikey','created','username','fikhb','uci','parent_smiles'],
+                                         chunksize=current_chunk_size, dtype=sdtype) 
+        for schunk in structure_df_chunk:
             complete_df_chunk = pd.merge(left=schunk, right=xchunk, left_on='uci', right_on='uci')
             if(merge_counter == 0):
                 complete_df_chunk.to_csv(path_or_buf=os.path.join(data_folder,"complete_df.csv"), index=False)
