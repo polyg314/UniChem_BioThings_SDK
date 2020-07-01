@@ -51,7 +51,7 @@ def load_annotations(data_folder):
     
     del structure_df 
 
-    csvsort(os.path.join(data_folder,"structure_df.csv"),[1])
+    # csvsort(os.path.join(data_folder,"structure_df.csv"),[1])
     # del structure_df
 
     # same for xref chunks - list -> dataframe 
@@ -85,7 +85,7 @@ def load_annotations(data_folder):
 
     del xref_df 
 
-    csvsort(os.path.join(data_folder,"xref_df.csv"),[2])
+    # csvsort(os.path.join(data_folder,"xref_df.csv"),[2])
     #     xref_chunk_list.append(chunk)
     # del xref_df_chunk
     
