@@ -14,8 +14,8 @@ def load_annotations(data_folder):
     print("hellooooo")
     # load source files
     source_file = os.path.join(data_folder,"UC_SOURCE.txt")
-    struct_file = os.path.join(data_folder,"UC_SP900.txt")
-    xref_file = os.path.join(data_folder,"UC_XP900.txt")
+    struct_file = os.path.join(data_folder,"UC_STRUCTURE.txt")
+    xref_file = os.path.join(data_folder,"UC_XREF.txt")
     assert os.path.exists(source_file)
     assert os.path.exists(struct_file)
     assert os.path.exists(xref_file)
@@ -40,7 +40,7 @@ def load_annotations(data_folder):
     
     xref_df_chunk = pd.read_csv(xref_file, sep='\t', header=None, usecols=['uci','src_id','src_compound_id'],
                                          names=['uci_old','src_id','src_compound_id','assignment','last_release_u_when_current','created ','lastupdated','userstamp','aux_src','uci'],
-                                         chunksize=1000, dtype=xdtype) 
+                                         chunksize=1000000, dtype=xdtype) 
     
     # append structure chunks to list
     for chunk in structure_df_chunk:  
