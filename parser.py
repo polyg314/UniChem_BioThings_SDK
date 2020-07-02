@@ -2,18 +2,13 @@ import pandas as pd
 import os, csv, re
 import numpy as np
 from biothings.utils.dataload import dict_convert, dict_sweep
-# from .yaml import yaml
-# from .yaml.error import error
 from .csvsort import csvsort
-# from .dask import dask
-
-# import dask.dataframe as dd
-
 from biothings import config
 logging = config.logger
 
 def load_annotations(data_folder):
 
+    # change chunk size based on files. usually use 1M for full UniChem data files
     current_chunk_size = 100000;
     # load source files
     source_file = os.path.join(data_folder,"UC_SOURCE.txt")
@@ -30,19 +25,15 @@ def load_annotations(data_folder):
     source_dict = {source_keys[i]: source_values[i] for i in range(len(source_keys))}     
 
     
-    ## make structure file 
-
-    # read through file in chunks - too big to loadd all at once
+    ## make structure file (condensed, then sorted) by reading and appending new file in chunks - too big to load all at once 
     sdtype={'uci':'int64','standardinchikey':'str'}
     
     structure_df_chunk = pd.read_csv(struct_file, sep='\t', header=None, usecols=['uci', 'standardinchikey'],
                                          names=['uci_old','standardinchi','standardinchikey','created','username','fikhb','uci','parent_smiles'],
                                          chunksize=current_chunk_size, dtype=sdtype) 
 
-    
-    # append structure chunks to list
-    smerge_counter = 0;
 
+    smerge_counter = 0; # use merge counter to append file after file is created
     for chunk in structure_df_chunk:
         if(smerge_counter == 0):
             chunk.to_csv(path_or_buf=os.path.join(data_folder,"structure_df.csv"), index=False)
@@ -50,12 +41,13 @@ def load_annotations(data_folder):
         else:
             chunk.to_csv(path_or_buf=os.path.join(data_folder,"structure_df.csv"), index=False, mode='a', header=False)    
 
-    del structure_df_chunk
+    del structure_df_chunk # clear from memory
 
+    ## use customized csvsort function - from edited csvsort module - see csvsort folder - sort by uci (column index 1)
     csvsort(os.path.join(data_folder,"structure_df.csv"),[1],numeric_column=True)
 
-    ## make xref file   
-    
+
+    ## make xref file - condensed   
     xdtype={'src_id':'int8','src_compound_id':'str','uci':'int64'}
     
     xref_df_chunk = pd.read_csv(xref_file, sep='\t', header=None, usecols=['src_id','src_compound_id', 'uci'],
@@ -71,11 +63,14 @@ def load_annotations(data_folder):
         else:
             chunk.to_csv(path_or_buf=os.path.join(data_folder,"xref_df.csv"), index=False, mode='a', header=False)    
 
+    del xref_df_chunk
 
+    ## use customized csvsort function to sort xref file by uci (column index 2)
     csvsort(os.path.join(data_folder,"xref_df.csv"),[2],numeric_column=True)
 
+
+    ## make data frame that keeps track of min and max uci value for each structure chunk 
     chunk_counter = 0;
-    
     structure_df_chunk = pd.read_csv(os.path.join(data_folder,"structure_df.csv"), chunksize=current_chunk_size)
     min_max_columns = ["chunk_start", "min_uci", "max_uci"];
     structure_min_max_df = pd.DataFrame(columns = min_max_columns)
@@ -88,6 +83,7 @@ def load_annotations(data_folder):
     
     xdf_chunk = pd.read_csv(os.path.join(data_folder,"xref_df.csv"), chunksize=current_chunk_size) 
 
+    ## loop through xdf chunks. merge with all structure chunks that have overlapping uci values
     merge_counter = 0; 
     for xchunk in xdf_chunk:
         current_x_min = min(xchunk["uci"])
@@ -106,14 +102,18 @@ def load_annotations(data_folder):
     del sdf_chunk
     del xdf_chunk 
 
-    
+    ## sort complete_df (merged structure and xref file) based on inchikey - alphabetically     
     csvsort(os.path.join(data_folder,"complete_df.csv"),[0], numeric_column = False)
 
-    new_entry = {}
-    last_inchi = '';
-    last_submitted_inchi = '1';
 
+
+    ## loop through merged complete data frame in chunks
     complete_df_chunk = pd.read_csv(os.path.join(data_folder,"complete_df.csv"), chunksize=current_chunk_size)
+
+
+    new_entry = {} ## each entry will be made based on inchikey
+    last_inchi = ''; ## keep track of the inchikey from the previous row looked at in the complete dataframe
+    last_submitted_inchi = '1'; ## keep track of last submitted inchikey - as json - to determine if final inchi will need to be submitted after for loop
 
     for chunk in complete_df_chunk:
         for row in chunk.itertuples(): 
@@ -140,7 +140,7 @@ def load_annotations(data_folder):
                 last_inchi = inchi
             else:
                 yield new_entry;
-                last_submitted_inchi = new_entry["_id"]
+                # last_submitted_inchi = new_entry["_id"]
                 new_entry = {
                     "_id" : inchi,
                     "unichem": {
@@ -150,5 +150,5 @@ def load_annotations(data_folder):
             last_inchi = inchi
 
 
-    if(last_submitted_inchi != new_entry["_id"]):
-        yield new_entry
+    # if(last_submitted_inchi != new_entry["_id"]):
+    yield new_entry ## submit final entry 
