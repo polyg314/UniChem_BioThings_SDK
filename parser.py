@@ -113,7 +113,6 @@ def load_annotations(data_folder):
 
     new_entry = {} ## each entry will be made based on inchikey
     last_inchi = ''; ## keep track of the inchikey from the previous row looked at in the complete dataframe
-    last_submitted_inchi = '1'; ## keep track of last submitted inchikey - as json - to determine if final inchi will need to be submitted after for loop
 
     for chunk in complete_df_chunk:
         for row in chunk.itertuples(): 
@@ -139,16 +138,13 @@ def load_annotations(data_folder):
                 }
                 last_inchi = inchi
             else:
-                yield new_entry;
-                # last_submitted_inchi = new_entry["_id"]
+                yield new_entry; ## yield created entry from previous row(s) when inchikey changes
                 new_entry = {
                     "_id" : inchi,
                     "unichem": {
                         source: source_id
                     }
                 }
-            last_inchi = inchi
+            last_inchi = inchi ## set last_inchi to the inchikey used in current iteration 
 
-
-    # if(last_submitted_inchi != new_entry["_id"]):
     yield new_entry ## submit final entry 
