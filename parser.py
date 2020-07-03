@@ -9,11 +9,11 @@ logging = config.logger
 def load_annotations(data_folder):
 
     # change chunk size based on files. usually use 1M for full UniChem data files
-    current_chunk_size = 100000;
+    current_chunk_size = 1000000;
     # load source files
     source_file = os.path.join(data_folder,"UC_SOURCE.txt")
-    struct_file = os.path.join(data_folder,"UC_SP900.txt")
-    xref_file = os.path.join(data_folder,"UC_XP900.txt")
+    struct_file = os.path.join(data_folder,"UC_STRUCTURE.txt")
+    xref_file = os.path.join(data_folder,"UC_XREF.txt")
     assert os.path.exists(source_file)
     assert os.path.exists(struct_file)
     assert os.path.exists(xref_file)
