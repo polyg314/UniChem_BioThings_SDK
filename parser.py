@@ -12,7 +12,7 @@ def load_annotations(data_folder):
     current_chunk_size = 1000000;
     # load source files
     source_file = os.path.join(data_folder,"UC_SOURCE.txt")
-    struct_file = os.path.join(data_folder,"UC_SP900txt")
+    struct_file = os.path.join(data_folder,"UC_SP900.txt")
     xref_file = os.path.join(data_folder,"UC_XP900.txt")
     assert os.path.exists(source_file)
     assert os.path.exists(struct_file)
