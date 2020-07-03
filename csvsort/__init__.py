@@ -14,7 +14,7 @@ class CsvSortError(Exception):
 def csvsort(input_filename,
             columns,
             output_filename=None,
-            max_size=1,
+            max_size=100,
             has_header=True,
             delimiter=',',
             show_progress=False,
