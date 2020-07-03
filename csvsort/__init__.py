@@ -14,7 +14,7 @@ class CsvSortError(Exception):
 def csvsort(input_filename,
             columns,
             output_filename=None,
-            max_size=100,
+            max_size=1,
             has_header=True,
             delimiter=',',
             show_progress=False,
@@ -67,7 +67,7 @@ def csvsort(input_filename,
         else:
             for filename in filenames:
                 memorysort(filename, columns, numeric_column, encoding)
-        sorted_filename = mergesort(filenames, columns, encoding=encoding)
+        sorted_filename = mergesort(filenames, columns, numeric_column, encoding=encoding)
 
     # XXX make more efficient by passing quoting, delimiter, and moving result
     # generate the final output file
@@ -150,15 +150,15 @@ def get_key(row, columns, numeric_column):
     else:
         return [row[column] for column in columns]
 
-def decorated_csv(filename, columns, encoding=None):
+def decorated_csv(filename, columns, numeric_column, encoding=None):
     """Iterator to sort CSV rows
     """
     with open(filename, newline='', encoding=encoding) as fp:
         for row in csv.reader(fp):
-            yield get_key(row, columns), row
+            yield get_key(row, columns, numeric_column), row
 
 
-def mergesort(sorted_filenames, columns, nway=2, encoding=None):
+def mergesort(sorted_filenames, columns, numeric_column, nway=2, encoding=None):
     """Merge these 2 sorted csv files into a single output file
     """
     merge_n = 0
@@ -169,7 +169,7 @@ def mergesort(sorted_filenames, columns, nway=2, encoding=None):
         with tempfile.NamedTemporaryFile(delete=False, mode='w') as output_fp:
             writer = csv.writer(output_fp)
             merge_n += 1
-            for _, row in heapq.merge(*[decorated_csv(filename, columns, encoding)
+            for _, row in heapq.merge(*[decorated_csv(filename, columns, numeric_column, encoding)
                                         for filename in merge_filenames]):
                 writer.writerow(row)
 
