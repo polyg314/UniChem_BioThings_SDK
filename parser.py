@@ -119,32 +119,34 @@ def load_annotations(data_folder):
             inchi = row[1]
             source = source_dict[row[3]]
             source_id = row[4]
-            # check to see if previous entry had same inchi code. if so, 
-            if(last_inchi == inchi):
-                # if source id already exists for source, then create/add to list. if not, create first entry for source
-                if(source in new_entry["unichem"]):
-                    if(type(new_entry["unichem"][source]) == str):
-                        new_entry["unichem"][source] = [new_entry["unichem"][source], source_id] 
+            # case where source_id was nan. if nan, do not add entry 
+            if(source_id == source_id):
+                # check to see if previous entry had same inchi code. if so, 
+                if(last_inchi == inchi):
+                    # if source id already exists for source, then create/add to list. if not, create first entry for source
+                    if(source in new_entry["unichem"]):
+                        if(type(new_entry["unichem"][source]) == str):
+                            new_entry["unichem"][source] = [new_entry["unichem"][source], source_id] 
+                        else:
+                            new_entry["unichem"][source].append(source_id) 
                     else:
-                        new_entry["unichem"][source].append(source_id) 
+                        new_entry["unichem"][source] = source_id
+                elif(len(last_inchi) == 0): 
+                    new_entry = {
+                        "_id" : inchi,
+                        "unichem": {
+                            source: source_id
+                        }
+                    }
+                    last_inchi = inchi
                 else:
-                    new_entry["unichem"][source] = source_id
-            elif(len(last_inchi) == 0): 
-                new_entry = {
-                    "_id" : inchi,
-                    "unichem": {
-                        source: source_id
+                    yield new_entry; ## yield created entry from previous row(s) when inchikey changes
+                    new_entry = {
+                        "_id" : inchi,
+                        "unichem": {
+                            source: source_id
+                        }
                     }
-                }
-                last_inchi = inchi
-            else:
-                yield new_entry; ## yield created entry from previous row(s) when inchikey changes
-                new_entry = {
-                    "_id" : inchi,
-                    "unichem": {
-                        source: source_id
-                    }
-                }
-            last_inchi = inchi ## set last_inchi to the inchikey used in current iteration 
+                last_inchi = inchi ## set last_inchi to the inchikey used in current iteration 
 
     yield new_entry ## submit final entry 
