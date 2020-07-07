@@ -119,8 +119,8 @@ def load_annotations(data_folder):
             inchi = row[1]
             source = source_dict[row[3]]
             source_id = row[4]
-            # case where source_id was nan. if nan, do not add entry 
-            if(source_id == source_id):
+            # make sure there are no missing values in entry (would show as nan)
+            if((source_id == source_id) and (source == source) and (inchi == inchi)):
                 # check to see if previous entry had same inchi code. if so, 
                 if(last_inchi == inchi):
                     # if source id already exists for source, then create/add to list. if not, create first entry for source
