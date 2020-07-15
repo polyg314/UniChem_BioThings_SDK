@@ -51,7 +51,7 @@ def get_latest_unichem_urls():
 
 class UniChemDumper(biothings.hub.dataload.dumper.LastModifiedHTTPDumper):
 
-    SRC_NAME = "unichem"
+    SRC_NAME = "UniChem_BioThings_SDK"
     SRC_ROOT_FOLDER = os.path.join(DATA_ARCHIVE_ROOT, SRC_NAME)
     SCHEDULE = None
     UNCOMPRESS = True
