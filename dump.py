@@ -9,7 +9,7 @@ from biothings.utils.common import uncompressall
 import biothings.hub.dataload.dumper
 
 import sys
-from .ftplib import ftplib
+# from .ftplib import ftplib
 
 
 class Unichem_biothings_sdkDumper(biothings.hub.dataload.dumper.LastModifiedFTPDumper):
