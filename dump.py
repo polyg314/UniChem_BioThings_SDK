@@ -57,8 +57,8 @@ class Unichem_biothings_sdkDumper(FTPDumper):
 		# # #login
 		# ftp.login()
 		# 
-        self.client = ftplib.FTP("ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/", timeout=self.FTP_TIMEOUT)
-        self.client.login(self.FTP_USER, self.FTP_PASSWD)
+        self.client = ftplib.FTP("ftp.ebi.ac.uk", timeout=self.FTP_TIMEOUT)
+        self.client.login()
         for fn in ["UC_SOURCE.txt.gz"]:
             local_file = os.path.join(self.new_data_folder,fn)
             if force or not os.path.exists(local_file) or self.remote_is_better(fn,local_file) or self.new_release_available():
