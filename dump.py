@@ -68,10 +68,11 @@ class Unichem_biothings_sdkDumper(FTPDumper):
     #                 self.release_client()
     #                 self.prepare_client()
 
-                    
+
 
     def create_todump_list(self, force=False):
     	# self.get_release()
+    	self.release = 'UDRI283'
     	source_local = os.path.join(self.new_data_folder,"UC_SOURCE.txt.gz")
     	self.to_dump.append({"remote": 'ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_SOURCE.txt.gz',"local":local})
 
