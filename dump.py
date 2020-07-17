@@ -6,9 +6,7 @@ from config import DATA_ARCHIVE_ROOT
 
 from biothings.utils.common import uncompressall
 
-# import biothings.hub.dataload.dumper
-
-from biothings.hub.dataload.dumper import FTPDumper, DumperException
+import biothings.hub.dataload.dumper
 
 import sys
 from .ftplib import *
@@ -17,19 +15,19 @@ from .ftplib import *
 
 
 
-class Unichem_biothings_sdkDumper(FTPDumper):
+class Unichem_biothings_sdkDumper(biothings.hub.dataload.dumper.LastModifiedFTPDumper):
 
     SRC_NAME = "UniChem_BioThings_SDK"
     SRC_ROOT_FOLDER = os.path.join(DATA_ARCHIVE_ROOT, SRC_NAME)
     SCHEDULE = None
     UNCOMPRESS = True
-    # SRC_URLS = get_latest_unichem_urls()
+    SRC_URLS = self.get_latest_unichem_urls()
 
     #SCHEDULE = "0 12 * * *"
 
-    # __metadata__ = {"src_meta": {}}
+    __metadata__ = {"src_meta": {}}
 
-    def create_todump_list(self, force=False):
+    def get_latest_unichem_urls():
 		"""Function largely borrowed from 
 		https://github.com/TranslatorIIPrototypes/Babel/blob/master/babel/unichem/unichem.py
 		"""
@@ -66,15 +64,10 @@ class Unichem_biothings_sdkDumper(FTPDumper):
 		structure = 'ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/' + f + '/UC_STRUCTURE.txt.gz';
 		xref = 'ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/' + f + '/UC_XREF.txt.gz';
 
-# local = os.path.join(self.new_data_folder,remote)
-		self.to_dump.append({"remote": source, "local": os.path.join(self.new_data_folder,"UC_SOURCE.txt")})
-		self.to_dump.append({"remote": structure, "local": os.path.join(self.new_data_folder,"UC_STRUCTURE.txt")})
-		self.to_dump.append({"remote": xref, "local": os.path.join(self.new_data_folder,"UC_XREF.txt")})
+		return([source, structure, xref])
 
-		# return([source, structure, xref])
-
-    # def post_dump(self, *args, **kwargs):
-    #     if self.__class__.UNCOMPRESS:
-    #         self.logger.info("Uncompress all archive files in '%s'" %
-    #                          self.new_data_folder)
-    #         uncompressall(self.new_data_folder)
+    def post_dump(self, *args, **kwargs):
+        if self.__class__.UNCOMPRESS:
+            self.logger.info("Uncompress all archive files in '%s'" %
+                             self.new_data_folder)
+            uncompressall(self.new_data_folder)
