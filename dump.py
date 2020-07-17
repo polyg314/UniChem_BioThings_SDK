@@ -53,8 +53,8 @@ class Unichem_biothings_sdkDumper(FTPDumper):
   #      	ftp = ftplib.FTP("ftp.ebi.ac.uk")
 		# # #login
 		# ftp.login()
-		self.release_client()
-        self.prepare_client()
+		# self.release_client()
+  #       self.prepare_client()
         for fn in ["UC_SOURCE.txt.gz"]:
             local_file = os.path.join(self.new_data_folder,fn)
             if force or not os.path.exists(local_file) or self.remote_is_better(fn,local_file) or self.new_release_available():
