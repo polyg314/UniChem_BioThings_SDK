@@ -53,7 +53,7 @@ class Unichem_biothings_sdkDumper(FTPDumper):
   #      	ftp = ftplib.FTP("ftp.ebi.ac.uk")
 		# # #login
 		# ftp.login()
-		# self.release_client()
+		# 
         self.prepare_client()
         for fn in ["UC_SOURCE.txt.gz"]:
             local_file = os.path.join(self.new_data_folder,fn)
@@ -64,6 +64,7 @@ class Unichem_biothings_sdkDumper(FTPDumper):
                 self.to_dump.append({"remote": "ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_SOURCE.txt.gz", "local":local_file})
 
     def post_dump(self, *args, **kwargs):
+    	self.release_client()
     	# ftp.quit()
         if self.__class__.UNCOMPRESS:
             self.logger.info("Uncompress all archive files in '%s'" % self.new_data_folder)
