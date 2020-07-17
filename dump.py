@@ -29,6 +29,20 @@ class Unichem_biothings_sdkDumper(FTPDumper):
     #     'ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_STRUCTURE.txt.gz',
     #     'ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_XREF.txt.gz'
     # ]
+    FTP_HOST = 'ftp.ebi.ac.uk'
+	CWD_DIR = '/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283'
+    VERSION_DIR = '/pub/databases/chembl/UniChem/data/oracleDumps'
+
+
+    def get_release(self):
+        try:
+            self.client.cwd(self.__class__.VERSION_DIR)
+            releases = sorted(self.client.nlst())
+            if len(releases) == 0:
+                raise DumperException("Can't any release information in '%s'" % self.__class__.VERSION_DIR)
+            self.release = releases[-1]
+        finally:
+            self.client.cwd(self.__class__.CWD_DIR)
 
     def create_todump_list(self, force=False):
     	source_local = os.path.join(self.new_data_folder,"UC_SOURCE.txt.gz")
