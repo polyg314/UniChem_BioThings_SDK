@@ -22,7 +22,7 @@ class Unichem_biothings_sdkDumper(FTPDumper):
     SRC_NAME = "UniChem_BioThings_SDK"
     SRC_ROOT_FOLDER = os.path.join(DATA_ARCHIVE_ROOT, SRC_NAME)
     SCHEDULE = None
-    # UNCOMPRESS = True
+    UNCOMPRESS = True
     # SRC_URLS = get_latest_unichem_urls()
 
     #SCHEDULE = "0 12 * * *"
@@ -67,9 +67,9 @@ class Unichem_biothings_sdkDumper(FTPDumper):
 		xref = 'ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/' + f + '/UC_XREF.txt.gz';
 
 # local = os.path.join(self.new_data_folder,remote)
-		self.to_dump.append({"remote": source, "local": os.path.join(self.new_data_folder,source)})
-		self.to_dump.append({"remote": structure, "local": os.path.join(self.new_data_folder,structure)})
-		self.to_dump.append({"remote": xref, "local": os.path.join(self.new_data_folder,xref)})
+		self.to_dump.append({"remote": source, "local": os.path.join(self.new_data_folder,"UC_SOURCE.txt.gz")})
+		self.to_dump.append({"remote": structure, "local": os.path.join(self.new_data_folder,"UC_STRUCTURE.txt.gz")})
+		self.to_dump.append({"remote": xref, "local": os.path.join(self.new_data_folder,"UC_XREF.txt.gz")})
 
 		# return([source, structure, xref])
 
