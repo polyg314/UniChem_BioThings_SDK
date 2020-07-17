@@ -6,7 +6,9 @@ from config import DATA_ARCHIVE_ROOT
 
 from biothings.utils.common import uncompressall
 
-import biothings.hub.dataload.dumper
+# import biothings.hub.dataload.dumper
+
+from biothings.hub.dataload.dumper import FTPDumper, DumperException
 
 import sys
 from .ftplib import *
@@ -15,7 +17,7 @@ from .ftplib import *
 
 
 
-class Unichem_biothings_sdkDumper(biothings.hub.dataload.dumper.LastModifiedFTPDumper):
+class Unichem_biothings_sdkDumper(FTPDumper):
 
     SRC_NAME = "UniChem_BioThings_SDK"
     SRC_ROOT_FOLDER = os.path.join(DATA_ARCHIVE_ROOT, SRC_NAME)
@@ -25,7 +27,7 @@ class Unichem_biothings_sdkDumper(biothings.hub.dataload.dumper.LastModifiedFTPD
 
     #SCHEDULE = "0 12 * * *"
 
-    __metadata__ = {"src_meta": {}}
+    # __metadata__ = {"src_meta": {}}
 
     def create_todump_list(self, force=False):
 		"""Function largely borrowed from 
@@ -64,10 +66,10 @@ class Unichem_biothings_sdkDumper(biothings.hub.dataload.dumper.LastModifiedFTPD
 		structure = 'ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/' + f + '/UC_STRUCTURE.txt.gz';
 		xref = 'ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/' + f + '/UC_XREF.txt.gz';
 
-
-		self.to_dump.append({"remote": source})
-		self.to_dump.append({"remote": structure})
-		self.to_dump.append({"remote": xref})
+# local = os.path.join(self.new_data_folder,remote)
+		self.to_dump.append({"remote": source, "local": os.path.join(self.new_data_folder,source)})
+		self.to_dump.append({"remote": structure, "local": os.path.join(self.new_data_folder,structure)})
+		self.to_dump.append({"remote": xref, "local": os.path.join(self.new_data_folder,xref)})
 
 		# return([source, structure, xref])
 
