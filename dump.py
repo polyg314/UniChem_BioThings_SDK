@@ -57,11 +57,11 @@ class Unichem_biothings_sdkDumper(FTPDumper):
                     local = os.path.join(self.new_data_folder,remote)
                     if not os.path.exists(local) or self.remote_is_better(remote,local):
                         self.to_dump.append({"remote": remote,"local":local})
-                except ftplib.error_temp as e:
+                except error_temp as e:
                     self.logger.debug("Recycling FTP client because: '%s'" % e)
                     self.release_client()
                     self.prepare_client()
-        	
+
         # for fn in ["UC_SOURCE.txt.gz"]:
         #     local_file = os.path.join(self.new_data_folder,fn)
         #     if force or not os.path.exists(local_file) or self.remote_is_better(fn,local_file) or self.new_release_available():
