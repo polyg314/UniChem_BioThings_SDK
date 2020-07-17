@@ -49,28 +49,19 @@ class Unichem_biothings_sdkDumper(FTPDumper):
 
     def create_todump_list(self, force=False):
         self.get_newest_info()
-        if force or self.new_release_available():
-            # get list of files to download
-            remote_files = self.client.nlst()
-            for remote in ["UC_SOURCE.txt.gz"]:
-                try:
-                    local = os.path.join(self.new_data_folder,remote)
-                    if not os.path.exists(local) or self.remote_is_better(remote,local):
-                        self.to_dump.append({"remote": remote,"local":local})
-                except error_temp as e:
-                    self.logger.debug("Recycling FTP client because: '%s'" % e)
-                    self.release_client()
-                    self.prepare_client()
-
-        # for fn in ["UC_SOURCE.txt.gz"]:
-        #     local_file = os.path.join(self.new_data_folder,fn)
-        #     if force or not os.path.exists(local_file) or self.remote_is_better(fn,local_file) or self.new_release_available():
-        #     	# path =  "ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/" + self.release + "/" + fn
-        #     	# self.logger.debug("PATHHHH")
-        #     	# self.logger.debug(path)
-        #         self.to_dump.append({"remote": "ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_SOURCE.txt.gz", "local":local_file})
+       	FTP("ftp.ebi.ac.uk")
+		#login
+		ftp.login()
+        for fn in ["UC_SOURCE.txt.gz"]:
+            local_file = os.path.join(self.new_data_folder,fn)
+            if force or not os.path.exists(local_file) or self.remote_is_better(fn,local_file) or self.new_release_available():
+            	# path =  "ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/" + self.release + "/" + fn
+            	# self.logger.debug("PATHHHH")
+            	# self.logger.debug(path)
+                self.to_dump.append({"remote": "ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_SOURCE.txt.gz", "local":local_file})
 
     def post_dump(self, *args, **kwargs):
+    	ftp.quit()
         if self.__class__.UNCOMPRESS:
             self.logger.info("Uncompress all archive files in '%s'" % self.new_data_folder)
             uncompressall(self.new_data_folder)
