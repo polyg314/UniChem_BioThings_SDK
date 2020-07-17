@@ -9,7 +9,8 @@ from biothings.utils.common import uncompressall
 # import biothings.hub.dataload.dumper
 
 # import sys
-from .ftplib import *
+# from .ftplib import *
+import ftplib
 
 from biothings.hub.dataload.dumper import FTPDumper, DumperException
 
@@ -49,7 +50,7 @@ class Unichem_biothings_sdkDumper(FTPDumper):
 
     def create_todump_list(self, force=False):
         self.get_newest_info()
-  #      	ftp = FTP("ftp.ebi.ac.uk")
+       	ftp = ftplib.FTP("ftp.ebi.ac.uk")
 		# #login
 		# ftp.login()
         for fn in ["UC_SOURCE.txt.gz"]:
