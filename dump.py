@@ -52,8 +52,7 @@ def get_latest_unichem_urls():
 	return([source, structure, xref])
 
 
-class Unichem_biothings_sdkDumper(
-        biothings.hub.dataload.dumper.LastModifiedFTPDumper):
+class Unichem_biothings_sdkDumper(biothings.hub.dataload.dumper.LastModifiedFTPDumper):
 
     SRC_NAME = "UniChem_BioThings_SDK"
     SRC_ROOT_FOLDER = os.path.join(DATA_ARCHIVE_ROOT, SRC_NAME)
