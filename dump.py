@@ -18,7 +18,7 @@ class Unichem_biothings_sdkDumper(FTPDumper):
     SRC_NAME = "UniChem_BioThings_SDK"
     SRC_ROOT_FOLDER = os.path.join(DATA_ARCHIVE_ROOT, SRC_NAME)  
 
-	UNCOMPRESS = True
+	# UNCOMPRESS = True
     FTP_HOST = 'ftp.ebi.ac.uk'
     CWD_DIR = '/pub/databases/chembl/UniChem/data/oracleDumps'
 
@@ -55,7 +55,11 @@ class Unichem_biothings_sdkDumper(FTPDumper):
             if force or not os.path.exists(local_file) or self.remote_is_better(fn,local_file) or self.new_release_available():
                 self.to_dump.append({"remote": fn, "local":local_file})
 
-
+    # def post_dump(self, *args, **kwargs):
+    #     if self.__class__.UNCOMPRESS:
+    #         self.logger.info("Uncompress all archive files in '%s'" %
+    #                          self.new_data_folder)
+    #         uncompressall(self.new_data_folder)
 
     # SCHEDULE = None
     # UNCOMPRESS = False
@@ -119,8 +123,4 @@ class Unichem_biothings_sdkDumper(FTPDumper):
 
     # # __metadata__ = {"src_meta": {}}
 
-    def post_dump(self, *args, **kwargs):
-        if self.__class__.UNCOMPRESS:
-            self.logger.info("Uncompress all archive files in '%s'" %
-                             self.new_data_folder)
-            uncompressall(self.new_data_folder)
+
