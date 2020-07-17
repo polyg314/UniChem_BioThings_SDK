@@ -1,7 +1,14 @@
 import os
+import os.path
+import sys
+import time
+import ftplib
+
 
 import biothings, config
 biothings.config_for_app(config)
+
+
 from config import DATA_ARCHIVE_ROOT
 
 from biothings.utils.common import uncompressall
@@ -10,7 +17,7 @@ from biothings.utils.common import uncompressall
 
 # import sys
 # from .ftplib import *
-import ftplib
+# import ftplib
 
 from biothings.hub.dataload.dumper import FTPDumper, DumperException
 
@@ -25,7 +32,7 @@ class Unichem_biothings_sdkDumper(FTPDumper):
     FTP_USER = ''
     FTP_PASSWD = ''
     FTP_TIMEOUT = 10 * 60.0  # we want dumper to timout if necessary
-
+    ARCHIVE = False
     #SCHEDULE = "0 6 * * *"
 
     def get_newest_info(self):
