@@ -22,6 +22,9 @@ class Unichem_biothings_sdkDumper(FTPDumper):
 	# UNCOMPRESS = True
     FTP_HOST = 'ftp.ebi.ac.uk'
     CWD_DIR = '/pub/databases/chembl/UniChem/data/oracleDumps'
+    FTP_USER = ''
+    FTP_PASSWD = ''
+    FTP_TIMEOUT = 10 * 60.0  # we want dumper to timout if necessary
 
     #SCHEDULE = "0 6 * * *"
 
@@ -54,7 +57,8 @@ class Unichem_biothings_sdkDumper(FTPDumper):
 		# # #login
 		# ftp.login()
 		# 
-        self.prepare_client()
+        self.client = FTP(self.FTP_HOST, timeout=self.FTP_TIMEOUT)
+        self.client.login(self.FTP_USER, self.FTP_PASSWD)
         for fn in ["UC_SOURCE.txt.gz"]:
             local_file = os.path.join(self.new_data_folder,fn)
             if force or not os.path.exists(local_file) or self.remote_is_better(fn,local_file) or self.new_release_available():
@@ -64,7 +68,7 @@ class Unichem_biothings_sdkDumper(FTPDumper):
                 self.to_dump.append({"remote": "ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_SOURCE.txt.gz", "local":local_file})
 
     def post_dump(self, *args, **kwargs):
-    	self.release_client()
+    	# self.release_client()
     	# ftp.quit()
         if self.__class__.UNCOMPRESS:
             self.logger.info("Uncompress all archive files in '%s'" % self.new_data_folder)
