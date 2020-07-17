@@ -6,7 +6,7 @@ from config import DATA_ARCHIVE_ROOT
 
 from biothings.utils.common import uncompressall
 
-import biothings.hub.dataload.dumper
+from biothings.hub.dataload.dumper import FTPDumper, DumperException
 
 import sys
 from .ftplib import *
@@ -15,7 +15,7 @@ from .ftplib import *
 
 
 
-class Unichem_biothings_sdkDumper(biothings.hub.dataload.dumper.LastModifiedFTPDumper):
+class Unichem_biothings_sdkDumper(FTPDumper):
 
 
 	SRC_NAME = "UniChem_BioThings_SDK"
