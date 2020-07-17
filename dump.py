@@ -18,7 +18,7 @@ from .ftplib import *
 class Unichem_biothings_sdkDumper(biothings.hub.dataload.dumper.LastModifiedFTPDumper):
 
 
-	SRC_NAME = "pubchem"
+	SRC_NAME = "UniChem_BioThings_SDK"
     SRC_ROOT_FOLDER = os.path.join(DATA_ARCHIVE_ROOT, SRC_NAME)
     FTP_HOST = 'ftp.ncbi.nlm.nih.gov'
     CWD_DIR = '/pubchem/Compound/CURRENT-Full/XML'
