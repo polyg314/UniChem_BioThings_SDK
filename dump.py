@@ -21,11 +21,7 @@ class Unichem_biothings_sdkDumper(biothings.hub.dataload.dumper.LastModifiedFTPD
     SRC_ROOT_FOLDER = os.path.join(DATA_ARCHIVE_ROOT, SRC_NAME)
     SCHEDULE = None
     UNCOMPRESS = True
-    # SRC_URLS = [
-    #     'ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_SOURCE.txt.gz',
-    #     'ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_STRUCTURE.txt.gz',
-    #     'ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_XREF.txt.gz'
-    # ]
+    SRC_URLS = []
     __metadata__ = {"src_meta": {}}
 
     def get_latest_unichem_urls():
