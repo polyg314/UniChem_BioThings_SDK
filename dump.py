@@ -20,14 +20,14 @@ class Unichem_biothings_sdkDumper(biothings.hub.dataload.dumper.LastModifiedFTPD
     SRC_NAME = "UniChem_BioThings_SDK"
     SRC_ROOT_FOLDER = os.path.join(DATA_ARCHIVE_ROOT, SRC_NAME)
     SCHEDULE = None
-    UNCOMPRESS = True
-    SRC_URLS = get_latest_unichem_urls()
+    # UNCOMPRESS = True
+    # SRC_URLS = get_latest_unichem_urls()
 
     #SCHEDULE = "0 12 * * *"
 
     __metadata__ = {"src_meta": {}}
 
-    def get_latest_unichem_urls():
+    def create_todump_list(self, force=False):
 		"""Function largely borrowed from 
 		https://github.com/TranslatorIIPrototypes/Babel/blob/master/babel/unichem/unichem.py
 		"""
@@ -64,10 +64,15 @@ class Unichem_biothings_sdkDumper(biothings.hub.dataload.dumper.LastModifiedFTPD
 		structure = 'ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/' + f + '/UC_STRUCTURE.txt.gz';
 		xref = 'ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/' + f + '/UC_XREF.txt.gz';
 
-		return([source, structure, xref])
 
-    def post_dump(self, *args, **kwargs):
-        if self.__class__.UNCOMPRESS:
-            self.logger.info("Uncompress all archive files in '%s'" %
-                             self.new_data_folder)
-            uncompressall(self.new_data_folder)
+		self.to_dump.append({"remote": source})
+		self.to_dump.append({"remote": structure})
+		self.to_dump.append({"remote": xref})
+
+		# return([source, structure, xref])
+
+    # def post_dump(self, *args, **kwargs):
+    #     if self.__class__.UNCOMPRESS:
+    #         self.logger.info("Uncompress all archive files in '%s'" %
+    #                          self.new_data_folder)
+    #         uncompressall(self.new_data_folder)
