@@ -71,6 +71,7 @@ class Unichem_biothings_sdkDumper(FTPDumper):
 
 
     def create_todump_list(self, force=False):
+    	self.logger.debug("HELOOOOO")
     	# self.get_release()
     	self.release = 'UDRI283'
     	source_local = os.path.join(self.new_data_folder,"UC_SOURCE.txt.gz")
