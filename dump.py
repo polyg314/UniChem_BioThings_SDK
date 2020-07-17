@@ -29,9 +29,9 @@ class Unichem_biothings_sdkDumper(FTPDumper):
     #     'ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_STRUCTURE.txt.gz',
     #     'ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_XREF.txt.gz'
     # ]
-    FTP_HOST = 'ftp.ebi.ac.uk'
-	CWD_DIR = '/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283'
-    VERSION_DIR = '/pub/databases/chembl/UniChem/data/oracleDumps'
+ #    FTP_HOST = 'ftp.ebi.ac.uk'
+	# CWD_DIR = '/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283'
+ #    VERSION_DIR = '/pub/databases/chembl/UniChem/data/oracleDumps'
 
 
     # def get_release(self):
