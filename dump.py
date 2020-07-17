@@ -67,8 +67,8 @@ class Unichem_biothings_sdkDumper(biothings.hub.dataload.dumper.LastModifiedFTPD
 
 		return([source, structure, xref])
 
-	def create_todump_list(self, force=False):
-		self.__class__.SRC_URLS = get_latest_unichem_urls()
+	# def create_todump_list(self, force=False):
+	# 	self.__class__.SRC_URLS = get_latest_unichem_urls()
 
     def post_dump(self, *args, **kwargs):
         if self.__class__.UNCOMPRESS:
