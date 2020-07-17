@@ -1,7 +1,7 @@
-import os
+# import os
 import os.path
-import sys
-import time
+# import sys
+# import time
 import ftplib
 
 
@@ -32,7 +32,7 @@ class Unichem_biothings_sdkDumper(FTPDumper):
     FTP_USER = ''
     FTP_PASSWD = ''
     FTP_TIMEOUT = 10 * 60.0  # we want dumper to timout if necessary
-    ARCHIVE = False
+    # ARCHIVE = False
     #SCHEDULE = "0 6 * * *"
 
     def get_newest_info(self):
@@ -64,15 +64,15 @@ class Unichem_biothings_sdkDumper(FTPDumper):
 		# # #login
 		# ftp.login()
 		# 
-        self.client = ftplib.FTP("ftp.ebi.ac.uk", timeout=self.FTP_TIMEOUT)
-        self.client.login()
+        # self.client = ftplib.FTP("ftp.ebi.ac.uk", timeout=self.FTP_TIMEOUT)
+        # self.client.login()
         for fn in ["UC_SOURCE.txt.gz"]:
             local_file = os.path.join(self.new_data_folder,fn)
             if force or not os.path.exists(local_file) or self.remote_is_better(fn,local_file) or self.new_release_available():
             	# path =  "ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/" + self.release + "/" + fn
-            	# self.logger.debug("PATHHHH")
-            	# self.logger.debug(path)
-                self.to_dump.append({"remote": "ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_SOURCE.txt.gz", "local":local_file})
+            	self.logger.debug("PATHHHH")
+            	self.logger.debug(path)
+                self.to_dump.append({"remote": fn, "local":local_file})
 
     def post_dump(self, *args, **kwargs):
     	# self.release_client()
