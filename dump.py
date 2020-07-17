@@ -55,7 +55,7 @@ class Unichem_biothings_sdkDumper(FTPDumper):
             	# path =  "ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/" + self.release + "/" + fn
             	# self.logger.debug("PATHHHH")
             	# self.logger.debug(path)
-                self.to_dump.append({"remote": fn, "local":local_file})
+                self.to_dump.append({"remote": "ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_SOURCE.txt.gz", "local":local_file})
 
     def post_dump(self, *args, **kwargs):
         if self.__class__.UNCOMPRESS:
