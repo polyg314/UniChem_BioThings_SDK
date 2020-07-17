@@ -16,9 +16,49 @@ from biothings.hub.dataload.dumper import FTPDumper, DumperException
 class Unichem_biothings_sdkDumper(FTPDumper):
 
     SRC_NAME = "UniChem_BioThings_SDK"
-    SRC_ROOT_FOLDER = os.path.join(DATA_ARCHIVE_ROOT, SRC_NAME)    
+    SRC_ROOT_FOLDER = os.path.join(DATA_ARCHIVE_ROOT, SRC_NAME)  
+
+
+    FTP_HOST = 'ftp.ebi.ac.uk'
+    CWD_DIR = '/pub/databases/chembl/UniChem/data/oracleDumps'
+
+    #SCHEDULE = "0 6 * * *"
+
+    def get_newest_info(self):
+        self.client.cwd("/pub/databases/chembl/UniChem/data/oracleDumps")
+        releases = self.client.nlst()
+        self.logger.debug(releases)
+        # stick to release 0.3.x
+        releases = [x.lstrip("UDRI") for x in releases if x.startswith('UDRI')]
+
+        self.logger.debug(releases)
+        # sort items based on date
+        releases = sorted(releases)
+        # get the last item in the list, which is the latest version
+        self.release = releases[-1]
+
+    def new_release_available(self):
+        current_release = self.src_doc.get("download",{}).get("release")
+        self.logger.debug(current_release)
+        if not current_release or self.release > current_release:
+            self.logger.info("New release '%s' found" % self.release)
+            return True
+        else:
+            self.logger.debug("No new release found")
+            return False
+
+    def create_todump_list(self, force=False):
+        self.get_newest_info()
+
+        for fn in ["UC_SOURCE.txt.gz"]:
+            local_file = os.path.join(self.new_data_folder,fn)
+            if force or not os.path.exists(local_file) or self.remote_is_better(fn,local_file) or self.new_release_available():
+                self.to_dump.append({"remote": fn, "local":local_file})
+
+
+
     # SCHEDULE = None
-    UNCOMPRESS = True
+    # UNCOMPRESS = False
     # SRC_URLS = [
     #     'ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_SOURCE.txt.gz',
     #     'ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_STRUCTURE.txt.gz',
@@ -70,17 +110,17 @@ class Unichem_biothings_sdkDumper(FTPDumper):
 #/UniChem_BioThings_SDK/UDRI283
 
 
-    def create_todump_list(self, force=False):
-    	self.logger.debug("HELOOOOO")
-    	# self.get_release()
-    	self.release = 'UDRI283'
-    	source_local = os.path.join(self.new_data_folder,"UC_SOURCE.txt.gz")
-    	self.to_dump.append({"remote": 'ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_SOURCE.txt.gz',"local":source_local})
+    # def create_todump_list(self, force=False):
+    # 	self.logger.debug("HELOOOOO")
+    # 	# self.get_release()
+    # 	self.release = 'UDRI283'
+    # 	source_local = os.path.join(self.new_data_folder,"UC_SOURCE.txt.gz")
+    # 	self.to_dump.append({"remote": 'ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_SOURCE.txt.gz',"local":source_local})
 
-    # __metadata__ = {"src_meta": {}}
+    # # __metadata__ = {"src_meta": {}}
 
-    def post_dump(self, *args, **kwargs):
-        if self.__class__.UNCOMPRESS:
-            self.logger.info("Uncompress all archive files in '%s'" %
-                             self.new_data_folder)
-            uncompressall(self.new_data_folder)
+    # def post_dump(self, *args, **kwargs):
+    #     if self.__class__.UNCOMPRESS:
+    #         self.logger.info("Uncompress all archive files in '%s'" %
+    #                          self.new_data_folder)
+    #         uncompressall(self.new_data_folder)
