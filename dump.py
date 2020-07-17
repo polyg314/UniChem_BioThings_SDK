@@ -35,7 +35,7 @@ class Unichem_biothings_sdkDumper(FTPDumper):
         # sort items based on date
         releases = sorted(releases)
         # get the last item in the list, which is the latest version
-        self.release = releases[-1]
+        self.release = "UDRI" + releases[-1]
 
     def new_release_available(self):
         current_release = self.src_doc.get("download",{}).get("release")
@@ -49,17 +49,15 @@ class Unichem_biothings_sdkDumper(FTPDumper):
 
     def create_todump_list(self, force=False):
         self.get_newest_info()
-
         for fn in ["UC_SOURCE.txt.gz"]:
             local_file = os.path.join(self.new_data_folder,fn)
             if force or not os.path.exists(local_file) or self.remote_is_better(fn,local_file) or self.new_release_available():
                 self.to_dump.append({"remote": fn, "local":local_file})
 
-    # def post_dump(self, *args, **kwargs):
-    #     if self.__class__.UNCOMPRESS:
-    #         self.logger.info("Uncompress all archive files in '%s'" %
-    #                          self.new_data_folder)
-    #         uncompressall(self.new_data_folder)
+    def post_dump(self, *args, **kwargs):
+        if self.__class__.UNCOMPRESS:
+            self.logger.info("Uncompress all archive files in '%s'" % self.new_data_folder)
+            uncompressall(self.new_data_folder)
 
     # SCHEDULE = None
     # UNCOMPRESS = False
