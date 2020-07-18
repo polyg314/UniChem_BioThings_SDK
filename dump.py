@@ -47,12 +47,12 @@ class Unichem_biothings_sdkDumper(FTPDumper):
         # sort items based on date
         releases = sorted(releases)
         # get the last item in the list, which is the latest version
-        self.release = "UDRI" + releases[1]
+        self.release = releases[-1]
 
     def new_release_available(self):
         current_release = self.src_doc.get("download",{}).get("release")
         self.logger.debug(current_release)
-        if not current_release or self.release > current_release:
+        if not current_release or int(self.release) > int(current_release):
             self.logger.info("New release '%s' found" % self.release)
             return True
         else:
