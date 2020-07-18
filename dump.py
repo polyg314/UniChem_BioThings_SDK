@@ -29,7 +29,11 @@ class Unichem_biothings_sdkDumper(FTPDumper):
         self.release = releases[-1]
 
     def new_release_available(self):
-        current_release = self.src_doc.get("download",{}).get("release")
+    	try:
+        	current_release = self.src_doc.get("download",{}).get("release")
+        except:
+        	# first download
+        	current_release = False
         if not current_release or int(self.release) > int(current_release):
             self.logger.info("New release '%s' found" % self.release)
             return True
