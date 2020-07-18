@@ -67,7 +67,12 @@ class Unichem_biothings_sdkDumper(FTPDumper):
             	# path =  "ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/" + self.release + "/" + fn
             	# self.logger.debug("PATHHHH")
             	# self.logger.debug(path)
-                self.to_dump.append({"remote": "/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_SOURCE.txt.gz", "local":local_file})
+            	try: 
+                	self.to_dump.append({"remote": "/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_SOURCE.txt.gz", "local":local_file})
+                except ftplib.error_temp as e:
+                    self.logger.debug("Recycling FTP client because: '%s'" % e)
+                    self.release_client()
+                    self.prepare_client()
 
     def post_dump(self, *args, **kwargs):
     	# self.release_client()
