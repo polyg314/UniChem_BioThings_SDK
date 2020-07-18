@@ -58,16 +58,16 @@ class Unichem_biothings_sdkDumper(FTPDumper):
         for fn in ["UC_SOURCE.txt.gz"]:
         # for fn in ["UC_SOURCE.txt.gz","UC_STRUCTURE.txt.gz","UC_XREF.txt.gz"]:
             local_file = os.path.join(self.new_data_folder,fn)
-           	if force or not os.path.exists(local_file) or self.new_release_available():
-            	# path =  "ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/" + self.release + "/" + fn
-            	# self.logger.debug("PATHHHH")
-            	# self.logger.debug(path)
-            	path = "/pub/databases/chembl/UniChem/data/oracleDumps/UDRI" + self.release + "/" + fn;
+            if force or not os.path.exists(local_file) or self.new_release_available():
+                # path =  "ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/" + self.release + "/" + fn
+                # self.logger.debug("PATHHHH")
+                # self.logger.debug(path)
+                path = "/pub/databases/chembl/UniChem/data/oracleDumps/UDRI" + self.release + "/" + fn;
                 self.to_dump.append({"remote": path, "local":local_file})
 
     def post_dump(self, *args, **kwargs):
-    	# self.release_client()
-    	# ftp.quit()
+        # self.release_client()
+        # ftp.quit()
         if self.__class__.UNCOMPRESS:
             self.logger.info("Uncompress all archive files in '%s'" % self.new_data_folder)
             uncompressall(self.new_data_folder)
@@ -85,7 +85,7 @@ class Unichem_biothings_sdkDumper(FTPDumper):
     #     'ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_XREF.txt.gz'
     # ]
  #    FTP_HOST = 'ftp.ebi.ac.uk'
-	# CWD_DIR = '/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283'
+    # CWD_DIR = '/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283'
  #    VERSION_DIR = '/pub/databases/chembl/UniChem/data/oracleDumps'
 
 
@@ -126,11 +126,11 @@ class Unichem_biothings_sdkDumper(FTPDumper):
 
 
     # def create_todump_list(self, force=False):
-    # 	self.logger.debug("HELOOOOO")
-    # 	# self.get_release()
-    # 	self.release = 'UDRI283'
-    # 	source_local = os.path.join(self.new_data_folder,"UC_SOURCE.txt.gz")
-    # 	self.to_dump.append({"remote": 'ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_SOURCE.txt.gz',"local":source_local})
+    #     self.logger.debug("HELOOOOO")
+    #     # self.get_release()
+    #     self.release = 'UDRI283'
+    #     source_local = os.path.join(self.new_data_folder,"UC_SOURCE.txt.gz")
+    #     self.to_dump.append({"remote": 'ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_SOURCE.txt.gz',"local":source_local})
 
     # # __metadata__ = {"src_meta": {}}
 
