@@ -63,12 +63,11 @@ class Unichem_biothings_sdkDumper(FTPDumper):
         # self.client.login()
         for fn in ["UC_SOURCE.txt.gz"]:
             local_file = os.path.join(self.new_data_folder,fn)
-            if force or not os.path.exists(local_file) or self.new_release_available():
+            if force or not os.path.exists(local_file) or self.remote_is_better(fn,local_file) or self.new_release_available():
             	# path =  "ftp://ftp.ebi.ac.uk/pub/databases/chembl/UniChem/data/oracleDumps/" + self.release + "/" + fn
             	# self.logger.debug("PATHHHH")
             	# self.logger.debug(path)
-				self.to_dump.append({"remote": "/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_SOURCE.txt.gz", "local":local_file})
-
+                self.to_dump.append({"remote": "/pub/databases/chembl/UniChem/data/oracleDumps/UDRI283/UC_SOURCE.txt.gz", "local":local_file})
 
     def post_dump(self, *args, **kwargs):
     	# self.release_client()
