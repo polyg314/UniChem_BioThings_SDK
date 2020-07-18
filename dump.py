@@ -61,7 +61,6 @@ class Unichem_biothings_sdkDumper(FTPDumper):
 
     def create_todump_list(self, force=False):
         self.get_newest_info()
-        self.release = "200"
   #      	ftp = ftplib.FTP("ftp.ebi.ac.uk")
 		# # #login
 		# ftp.login()
