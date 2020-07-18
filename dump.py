@@ -33,7 +33,7 @@ class Unichem_biothings_sdkDumper(FTPDumper):
     FTP_PASSWD = ''
     FTP_TIMEOUT = 10 * 60.0  # we want dumper to timout if necessary
     # ARCHIVE = False
-    #SCHEDULE = "0 6 * * *"
+    SCHEDULE = "0 6 * * *"
     UNCOMPRESS = True
 
     def get_newest_info(self):
