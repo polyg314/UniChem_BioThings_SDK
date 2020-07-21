@@ -7,6 +7,21 @@ from biothings import config
 logging = config.logger
 
 def load_annotations(data_folder):
+    """Load annotations function
+
+    1. Create source dictionary for source name for source id (src_id)
+
+    2. Sort structure and xref files by uci (csvsort)
+
+    3. Merge structure and xref files by uci, keeping only uci, standardinchikey,
+    src_id, and src_compound_id. 
+
+    4. Sort by standardinchikey so all entries next to each other (csvsort)
+
+    5. Use source file to convert src_id to source name. 
+
+    6. Yeild document dictionaries one at a time (based on standardinchikey)    
+    """
 
     # change chunk size based on files. usually use 1M for full UniChem data files
     current_chunk_size = 1000000;
