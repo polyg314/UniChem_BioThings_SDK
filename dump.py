@@ -20,8 +20,8 @@ class Unichem_biothings_sdkDumper(FTPDumper):
     UNCOMPRESS = True
 
     def get_newest_info(self):
-    	"""Get the release number of the most recent dump directory"""
-    	# change working directory to directory listing all dump directories
+        """Get the release number of the most recent dump directory"""
+        # change working directory to directory listing all dump directories
         self.client.cwd("/pub/databases/chembl/UniChem/data/oracleDumps")
         # get list of directories
         releases = self.client.nlst()
@@ -33,8 +33,8 @@ class Unichem_biothings_sdkDumper(FTPDumper):
         self.release = releases[-1]
 
     def new_release_available(self):
-    	"""Determine if newest release needs to be downloaded"""
-    	# try checking release of version already downloaded
+        """Determine if newest release needs to be downloaded"""
+        # try checking release of version already downloaded
         try:
             current_release = self.src_doc.get("download",{}).get("release")
         except:
@@ -48,7 +48,7 @@ class Unichem_biothings_sdkDumper(FTPDumper):
             return False
 
     def create_todump_list(self, force=False):
-    	"""Add files to dump list for downloading"""
+        """Add files to dump list for downloading"""
         self.get_newest_info()
         for fn in ["UC_SOURCE.txt.gz","UC_STRUCTURE.txt.gz","UC_XREF.txt.gz"]:
             local_file = os.path.join(self.new_data_folder,fn)
@@ -59,7 +59,7 @@ class Unichem_biothings_sdkDumper(FTPDumper):
                 self.to_dump.append({"remote": path, "local":local_file})
 
     def post_dump(self, *args, **kwargs):
-    	"""After download/dump, uncompress the downloaded .gz files"""
+        """After download/dump, uncompress the downloaded .gz files"""
         # UNCOMPRESS set to True
         if self.__class__.UNCOMPRESS:
             self.logger.info("Uncompress all archive files in '%s'" % self.new_data_folder)
