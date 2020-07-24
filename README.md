@@ -1,2 +1,2 @@
 # UniChem_BioThings_SDK
-Files for UniChem data integration into BioThings SDK for API generation
+UniChem data API for integration into MyChem.info API
