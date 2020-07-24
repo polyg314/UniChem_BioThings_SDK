@@ -19,7 +19,6 @@ class Unichem_biothings_sdkUploader(
 
     __metadata__ = {"src_meta": {
                         "url": 'https://www.ebi.ac.uk/unichem',
-                        "reference_article_url": 'http://www.jcheminf.com/content/5/1/3',
                         "license_url": ("https://s100.copyright.com/AppDispatchServlet?title=UniChem"
                             "%3A%20a%20unified%20chemical%20structure%20cross-referencing"
                             "%20and%20identifier%20tracking%20system&author=Jon%20Chambers"
@@ -30,7 +29,7 @@ class Unichem_biothings_sdkUploader(
                         "license": "CC BY-SA 4.0"
                         }
                     }
-                    
+
     idconverter = None
     storage_class = biothings.hub.dataload.storage.BasicStorage
 
