@@ -136,6 +136,9 @@ def load_annotations(data_folder):
             source_id = row[4]
             # make sure there are no missing values in entry (would show as nan)
             if((source_id == source_id) and (source == source) and (inchi == inchi)):
+                # reformat chebi source id to fit MyChem.info syntax 
+                if(source == 'chebi'):
+                    source_id = 'CHEBI:' + source_id
                 # check to see if previous entry had same inchi code. if so, 
                 if(last_inchi == inchi):
                     # if source id already exists for source, then create/add to list. if not, create first entry for source
