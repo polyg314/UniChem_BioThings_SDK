@@ -12,12 +12,12 @@ from biothings.hub.dataload.dumper import FTPDumper, DumperException
 
 class Unichem_biothings_sdkDumper(FTPDumper):
 
-#     SRC_NAME = "UniChem_BioThings_SDK"
-#     SRC_ROOT_FOLDER = os.path.join(DATA_ARCHIVE_ROOT, SRC_NAME)  
-#     FTP_HOST = 'ftp.ebi.ac.uk'
-#     CWD_DIR = '/pub/databases/chembl/UniChem/data/oracleDumps'
-#     SCHEDULE = "0 6 * * *"
-#     UNCOMPRESS = True
+    SRC_NAME = "UniChem_BioThings_SDK"
+    SRC_ROOT_FOLDER = os.path.join(DATA_ARCHIVE_ROOT, SRC_NAME)  
+    FTP_HOST = 'ftp.ebi.ac.uk'
+    CWD_DIR = '/pub/databases/chembl/UniChem/data/oracleDumps'
+    SCHEDULE = "0 6 * * *"
+    UNCOMPRESS = True
 
 #     def get_newest_info(self):
 #         """Get the release number of the most recent dump directory"""
