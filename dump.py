@@ -60,7 +60,7 @@ class Unichem_biothings_sdkDumper(FTPDumper):
 
     def post_dump(self, *args, **kwargs):
         """After download/dump, uncompress the downloaded .gz files"""
-        UNCOMPRESS set to True
+        # UNCOMPRESS set to True
         if self.__class__.UNCOMPRESS:
             self.logger.info("Uncompress all archive files in '%s'" % self.new_data_folder)
             uncompressall(self.new_data_folder)
