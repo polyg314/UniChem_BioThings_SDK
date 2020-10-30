@@ -16,8 +16,9 @@ class Unichem_biothings_sdkDumper(FTPDumper):
     SRC_ROOT_FOLDER = os.path.join(DATA_ARCHIVE_ROOT, SRC_NAME)  
     FTP_HOST = 'ftp.ebi.ac.uk'
     CWD_DIR = '/pub/databases/chembl/UniChem/data/oracleDumps'
-    ## resource for cron scheduling: https://en.wikipedia.org/wiki/Cron
-    SCHEDULE = "0 6 * * *" # run daily at 6am 
+    # resource for cron scheduling: https://en.wikipedia.org/wiki/Cron
+    # run daily at 6am 
+    SCHEDULE = "0 6 * * *" 
     UNCOMPRESS = True
 
     def get_newest_info(self):
