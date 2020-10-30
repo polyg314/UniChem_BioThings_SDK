@@ -30,7 +30,7 @@ class Unichem_biothings_sdkDumper(FTPDumper):
         # remove alpha characters from direcotry names, leaving only numbers
         releases = [x.lstrip("UDRI") for x in releases if x.startswith('UDRI')]
         # convert to integers for proper sorting
-        # releases = list(map(int,releases))
+        releases = list(map(int,releases))
         # sort items based on UDRI number - highest is most recent
         releases = sorted(releases) # convert to int
         # get the last item in the list, which is the latest version
